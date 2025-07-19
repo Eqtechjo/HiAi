@@ -1,0 +1,840 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>HiAi - Smart Security Solutions</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+    
+    <style>
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #f2f6fa;
+    color: #1c1c1c;
+
+    scrollbar-width: thin;
+    scrollbar-color: #004c92 #e0e6ed;
+  }
+body, html {
+  overflow-x: hidden;
+}
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #e0e6ed;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #004c92;
+    border-radius: 10px;
+    border: 2px solid #e0e6ed;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #ffa726;
+  }
+
+  header {
+    background: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    flex-wrap: wrap;
+  }
+
+  header img {
+    height: 50px;
+  }
+
+  nav {
+    display: flex;
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+  }
+
+  nav a {
+    text-decoration: none;
+    color: #004c92;
+    font-weight: 600;
+    font-size: 15px;
+    transition: color 0.3s;
+  }
+
+  nav a:hover {
+    color: #ffa726;
+  }
+
+  .cta-btn {
+    background: #004c92;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background 0.3s;
+  }
+
+  .cta-btn:hover {
+    background: #ffa726;
+    color: #fff;
+  }
+
+  .menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 4px;
+  }
+
+  .menu-toggle div {
+    width: 25px;
+    height: 3px;
+    background-color: #004c92;
+    border-radius: 2px;
+    transition: 0.3s;
+  }
+
+  @media (max-width: 768px) {
+    nav {
+      width: 100%;
+      justify-content: flex-end;
+    }
+
+    nav ul {
+      flex-direction: column;
+      width: 100%;
+      display: none;
+      background-color: #fff;
+      margin-top: 10px;
+      border-top: 1px solid #eee;
+      padding: 20px 0;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+      animation: slideDown 0.3s ease;
+      align-items: flex-end; /* قوائم من اليمين */
+      text-align: right;
+    }
+
+    nav ul.active {
+      display: flex;
+    }
+
+    .menu-toggle {
+      display: flex;
+    }
+
+    .cta-btn {
+      display: none; /* إخفاء الزر على الموبايل والتابلت */
+    }
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  /* الـ Hero */
+  .hero {
+    position: relative;
+    width: 100%;
+    height: 90vh;
+    overflow: hidden;
+  }
+
+  .hero-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+  }
+
+  .hero-slide::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* الطبقة الداكنة */
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+
+  .hero-slide.active {
+    opacity: 1;
+  }
+
+.hero-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
+  padding: 30px 40px;
+  z-index: 2;
+  animation: fadeInUp 1s ease-in-out;
+}
+
+.hero-text h1 {
+  font-size: 48px;
+  margin-bottom: 10px;
+  color: #ffa726;
+  text-shadow: 1px 1px 8px rgba(0,0,0,0.5);
+  font-weight: 700;
+}
+
+.hero-text h1 .sub-text {
+  color: #ffffff;
+  font-weight: 400;
+  font-size: 32px;
+  text-shadow: 1px 1px 6px rgba(0,0,0,0.4);
+}
+
+.hero-text p {
+  font-size: 20px;
+  margin: 0;
+  color: #ffffff;
+  text-shadow: 1px 1px 6px rgba(0,0,0,0.4);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translate(-50%, -40%); }
+  to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+@media (max-width: 768px) {
+  .hero-text {
+    padding: 20px 20px;
+        height: 65vh; /* تقليل الارتفاع قليلاً ليكون مناسب */
+
+  }
+
+  .hero-text h1 {
+    font-size: 28px;
+  }
+
+  .hero-text h1 .sub-text {
+    font-size: 16px;
+  }
+
+  .hero-text p {
+    font-size: 12px;
+  }
+}
+
+      section {
+        padding: 80px 60px;
+      }
+      .grid {
+        display: grid;
+        gap: 30px;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      }
+      .card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s;
+      }
+      .card:hover {
+        transform: translateY(-5px);
+      }
+      .card img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+      }
+      .card .content {
+        padding: 20px;
+      }
+      .card h3 {
+        margin: 0 0 10px;
+        color: #004c92;
+      }
+
+      /* ====== القسم الجديد ====== */
+      .surveillance-section {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 60px;
+        padding: 80px 60px;
+        background: white;
+        border-radius: 10px;
+        max-width: 1200px;
+        margin: 0 auto 80px;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.07);
+        flex-wrap: wrap;
+      }
+      .surveillance-text {
+        flex: 1 1 500px;
+        color: #1c1c1c;
+        font-size: 18px;
+        line-height: 1.6;
+      }
+      .surveillance-text strong {
+        color: #004c92;
+        font-weight: 600;
+        font-size: 22px;
+        display: block;
+        margin-bottom: 15px;
+      }
+      .surveillance-image {
+        flex: 1 1 400px;
+        text-align: center;
+      }
+      .surveillance-image img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      }
+
+      footer {
+        background: #004c92;
+        color: white;
+        padding: 40px 60px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+      footer .info, footer .social {
+        flex: 1 1 300px;
+      }
+      footer a {
+        color: white;
+        text-decoration: none;
+        display: block;
+        margin-bottom: 10px;
+      }
+      footer a i {
+        margin-right: 8px;
+      }
+
+      @media (max-width: 900px) {
+        .surveillance-section {
+          flex-direction: column-reverse;
+          padding: 40px 20px;
+        }
+        .surveillance-text, .surveillance-image {
+          flex: 1 1 100%;
+        }
+        .surveillance-text {
+          text-align: center;
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+
+<header>
+  <img src="https://res.cloudinary.com/dcbxuax2c/image/upload/v1752426303/%D9%8B_unn6mp_epv4pk.png" alt="Logo">
+
+  <div class="menu-toggle" onclick="toggleMenu()">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+
+  <nav>
+<ul id="nav-menu">
+  <li><a href="index.html">Home</a></li>
+  <li><a href="products.html">Products</a></li>
+  <li><a href="contact.html">Contact</a></li>
+  <li><a href="about.html">About</a></li>
+  <li><a href="video-gallery.html">Video gallery</a></li>
+</ul>
+  </nav>
+
+  <a href="https://forms.gle/1pYT5ncYJcAn7agcA" class="cta-btn">Get a Quote</a>
+</header>
+
+<div class="hero">
+  <div class="hero-slide active" style="background-image: url('https://res.cloudinary.com/dcbxuax2c/image/upload/v1752717395/5_apjnne.png');">
+    <div class="hero-text">
+      <h1>Smart Security Better Life  <span class="sub-text"></span></h1>
+      <p>Welcome To Grandsecu, Make Your Surroundings Safer</p>
+    </div>
+  </div>
+  <div class="hero-slide" style="background-image: url('https://res.cloudinary.com/dcbxuax2c/image/upload/v1752717302/10_iywytp.png');">
+    <div class="hero-text">
+      <h1>Smart WiFi Cameras</h1>
+      <p>Easy installation, 24/7 Live monitoring, cloud storage</p>
+    </div>
+  </div>
+  <div class="hero-slide" style="background-image: url('https://res.cloudinary.com/dcbxuax2c/image/upload/v1752717294/11_q6devy.png');">
+    <div class="hero-text">
+      <h1>Let Us Help You</h1>
+      <p>The possibilities are endless when we work together</p>
+    </div>
+  </div>
+</div>
+
+
+    <!-- القسم الجديد -->
+    <section class="surveillance-section" aria-label="The best surveillance cameras">
+      <div class="surveillance-image">
+        <img src="https://res.cloudinary.com/dcbxuax2c/image/upload/v1752798631/AI-security-camera_hfkylw.png" alt="Surveillance camera image" />
+      </div>
+      <div class="surveillance-text">
+        <strong>The best surveillance cameras</strong>
+        <p>We specialize in professional security camera equipment including indoor and outdoor surveillance cameras, and PTZ cameras. Our wide selection of home and business security cameras are suitable for any camera system. Our outdoor surveillance cameras are designed to withstand rain, snow, and dust thanks to their IP66. Rugged design, infrared night vision, and great picture quality make our 4K security cameras a perfect fit for your security camera system.</p>
+        <p>Every camera from CCTV Camera world provides unbeatable value &amp; quality to protect your home or business to keep an eye when away.</p>
+      </div>
+    </section>
+<section class="features-section" aria-label="Smart Cameras Features" style="max-width:1200px; margin:0 auto 80px; padding:80px 60px; background:#fff; border-radius:10px; box-shadow: 0 4px 25px rgba(0,0,0,0.1);">
+  <div style="display:flex; flex-wrap: wrap; align-items:center; gap:60px; justify-content:center;">
+
+<div class="container" style="display: flex; flex-wrap: wrap; gap: 40px; align-items: center; max-width: 1000px; margin: auto;">
+
+  <!-- الصورة الكبيرة -->
+  <div class="image-box" style="flex: 1 1 400px; min-width: 300px; text-align: center; order: 2;">
+    <img src="https://res.cloudinary.com/dcbxuax2c/image/upload/v1752721816/WIRED_DVR_VISION_AI_Category_Header_Mobile_hec14e.webp" alt="Eye Icon" style="max-width: 100%; height: 100%; border-radius: 15px; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15));" />
+  </div>
+
+  <!-- النقاط -->
+  <div class="points-box" style="flex: 1 1 300px; min-width: 200px; display: flex; flex-direction: column; gap: 30px; color: #1c1c1c; font-family: 'Poppins', sans-serif; align-items: center; text-align: center; order: 1;">
+
+    <!-- النقاط كما هي -->
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; max-width: 320px;">
+      <i class="fas fa-eye" style="font-size: 30px; color: #004c92; filter: drop-shadow(0 3px 6px rgba(0,76,146,0.5));"></i>
+      <h3 style="margin: 0; font-weight: 700; font-size: 18px; color: #004c92;">We use the best WiFi Smart cameras</h3>
+      <p style="margin: 0; font-size: 16px; line-height: 1.5;">Artificial Intelligence is included and Operated through a mobile App</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; max-width: 320px;">
+      <i class="fas fa-tv" style="font-size: 18px; color: #004c92; filter: drop-shadow(0 3px 6px rgba(0,76,146,0.5));"></i>
+      <h3 style="margin: 0; font-weight: 600; font-size: 20px; color: #004c92;">Remote Monitoring</h3>
+      <p style="margin: 0; font-size: 14px; line-height: 1.4;">The cameras streams live footage of what’s going on around your house to your smart phone.</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; max-width: 320px;">
+      <i class="fas fa-cog" style="font-size: 35px; color: #004c92; filter: drop-shadow(0 3px 6px rgba(0,76,146,0.5));"></i>
+      <h3 style="margin: 0; font-weight: 600; font-size: 20px; color: #004c92;">Easy to Install</h3>
+      <p style="margin: 0; font-size: 14px; line-height: 1.4;">You don’t need special tools. You can easily move WiFi security cameras from one location to another.</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; max-width: 320px;">
+      <i class="fas fa-bell" style="font-size: 35px; color: #004c92; filter: drop-shadow(0 3px 6px rgba(0,76,146,0.5));"></i>
+      <h3 style="margin: 0; font-weight: 600; font-size: 20px; color: #004c92;">Real time Alerts</h3>
+      <p style="margin: 0; font-size: 14px; line-height: 1.4;">You can receive notifications when something out of the ordinary happens.</p>
+    </div>
+
+  </div>
+
+</div>
+
+<style>
+  @media (max-width: 768px) {
+    .container {
+      flex-direction: column !important;
+    }
+    .image-box {
+      order: 2 !important;
+    }
+    .points-box {
+      order: 1 !important;
+    }
+  }
+</style>
+
+
+    </div>
+  </div>
+  <section style="padding: 100px 20px; background: #ffffff;">
+  <h2 style="text-align: center; font-size: 30px; color: #004c92; margin-bottom: 10px;">CCTV Application Systems</h2>
+  <p style="text-align: center; max-width: 700px; margin: 0 auto 60px; font-size: 16px;">
+    Today on the surveillance camera market, there are many recording devices such as XVR, DVR, NVR — what does it mean? Let’s find out.
+  </p>
+
+  <div style="position: relative; max-width: 900px; margin: 0 auto;">
+    <!-- الصورة المركزية -->
+    <div style="text-align: center;">
+      <img src="https://res.cloudinary.com/dcbxuax2c/image/upload/v1752543514/DSC02066-1_yhouxt.webp"
+           alt="DVR Device"
+           style="width: 280px; max-width: 100%; z-index: 2;">
+    </div>
+
+    <!-- شبكة الكروت -->
+    <div style="position: relative; margin-top: 60px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px; justify-content: center; align-items: center;">
+
+      <div style="background: #f5f9fd; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.06);">
+        <i class="fas fa-microchip" style="font-size: 28px; color: #004c92; margin-bottom: 12px;"></i>
+        <h3 style="font-size: 16px; margin-bottom: 8px;">XVR</h3>
+        <p style="font-size: 13px;">The most modern and optimal camera recorder integrated for all CCTV types.</p>
+      </div>
+
+      <div style="background: #f5f9fd; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.06);">
+        <i class="fas fa-video" style="font-size: 28px; color: #004c92; margin-bottom: 12px;"></i>
+        <h3 style="font-size: 16px; margin-bottom: 8px;">DVR</h3>
+        <p style="font-size: 13px;">This is a type of video recorder for analog cameras.</p>
+      </div>
+
+      <div style="background: #f5f9fd; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.06);">
+        <i class="fas fa-network-wired" style="font-size: 28px; color: #004c92; margin-bottom: 12px;"></i>
+        <h3 style="font-size: 16px; margin-bottom: 8px;">NVR</h3>
+        <p style="font-size: 13px;">This type of recorder was born based on the technology of IP cameras.</p>
+      </div>
+
+      <div style="background: #f5f9fd; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.06);">
+        <i class="fas fa-server" style="font-size: 28px; color: #004c92; margin-bottom: 12px;"></i>
+        <h3 style="font-size: 16px; margin-bottom: 8px;">HVR</h3>
+        <p style="font-size: 13px;">This hybrid video recorder can be used for both Analog and IP cameras.</p>
+      </div>
+
+    </div>
+  </div>
+</section>  
+
+</section>
+
+    <section id="products">
+      <h2>Our Products</h2>
+      <div class="grid">
+        <div class="card">
+          <img src="https://res.cloudinary.com/dcbxuax2c/image/upload/v1752541775/2_m4j1ez.png" alt="Camera 1">
+          <div class="content">
+            <h3>GS-K635-RA8G</h3>
+            <p>Outdoor bullet camera with IR night vision and HD clarity.</p>
+          </div>
+        </div>
+        <div class="card">
+          <img src="https://res.cloudinary.com/dcbxuax2c/image/upload/v1752541768/4_pecwuy.png" alt="Camera 2">
+          <div class="content">
+            <h3>HD564E-AO-K03</h3>
+            <p>Dome indoor camera with wide angle and durable shell.</p>
+          </div>
+        </div>
+        <div class="card">
+          <img src="https://res.cloudinary.com/dcbxuax2c/image/upload/v1752541764/5_tltcpz.png" alt="Camera 3">
+          <div class="content">
+            <h3>GS-K675-APD</h3>
+            <p>Commercial surveillance system with motion detection.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+<footer>
+  <div class="info">
+    <h3>HiAi Contact</h3>
+    <a href="tel:0798547669"><i class="fas fa-phone"></i> 0798547669</a>
+    <a href="mailto:info@hiai-ai.com"><i class="fas fa-envelope"></i> info@hiai-ai.com</a>
+    <a href="https://wa.me/message/KSOZNQSSTILKN1"><i class="fab fa-whatsapp"></i> WhatsApp Chat</a>
+  </div>
+  <div class="social">
+    <h3>Follow Us</h3>
+    <a href="https://www.facebook.com/share/16eZW4zfCV/?mibextid=wwXIfr"><i class="fab fa-facebook"></i> Facebook</a>
+  </div>
+
+  <div style="text-align:center; margin-top:40px;">
+    <p style="margin-bottom:8px; font-family: Arial, sans-serif; font-size:14px; color:#aaa;">
+      Website developed by
+    </p>
+<img
+  src="https://res.cloudinary.com/dcbxuax2c/image/upload/v1751767267/Untitled_design_46_l0l0mt.png"
+  alt="EQtech Jordan Logo"
+  width="70"
+  style="display:inline-block; 
+         box-shadow: 0 0 0px0px rgba(255, 255, 255, 0.15);"
+/>
+
+  </div>
+</footer>
+
+    <script>
+      const slides = document.querySelectorAll('.hero-slide');
+      let current = 0;
+      setInterval(() => {
+        slides[current].classList.remove('active');
+        current = (current + 1) % slides.length;
+        slides[current].classList.add('active');
+      }, 5000);
+        const header = document.querySelector('header');
+
+  // نضيف الانتقالات للحركة
+  header.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+
+  window.addEventListener('scroll', function () {
+    if (window.scrollY > 10) {
+      header.style.boxShadow = '0 12px 28px rgba(0, 0, 0, 0.2)';
+      header.style.transform = 'translateY(-6px)';
+    } else {
+      header.style.boxShadow = '0 2px 12px rgba(0, 0, 0, 0.08)';
+      header.style.transform = 'translateY(0)';
+    }
+  });
+    const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate-visible');
+      }
+    });
+  }, {
+    threshold: 0.1
+  });
+
+  const sections = document.querySelectorAll(
+    '.hero, .card, .surveillance-section, section'
+  );
+
+  sections.forEach(sec => {
+    // تأثير مخصص لـ hero
+    if (sec.classList.contains('hero')) {
+      sec.style.opacity = 0;
+      sec.style.transform = 'scale(0.95)';
+      sec.style.transition = 'all 1s ease-out';
+    } else {
+      sec.style.opacity = 0;
+      sec.style.transform = 'translateY(50px)';
+      sec.style.transition = 'all 0.8s ease-out';
+    }
+    observer.observe(sec);
+  });
+
+  // كلاس التنشيط العام والخاص بالـ hero
+  const style = document.createElement('style');
+  style.innerHTML = `
+    .animate-visible.hero {
+      opacity: 1 !important;
+      transform: scale(1) !important;
+    }
+
+    .animate-visible:not(.hero) {
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+    }
+  `;
+  document.head.appendChild(style);
+    </script>
+    <style>
+  /* أيقونة المور دائرية */
+  .apps-float-icon {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: pulse 2.5s infinite;
+    background: transparent;
+    transition: box-shadow 0.3s ease;
+    z-index: 9999;
+  }
+  .apps-float-icon:hover {
+    box-shadow: 0 8px 25px rgba(255, 106, 0, 0.8);
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 6px 20px rgba(255, 106, 0, 0.7); }
+    50% { box-shadow: 0 10px 30px rgba(255, 106, 0, 1); }
+  }
+
+  /* أيقونة مور (الثلاث نقاط) */
+  .apps-float-icon svg {
+    width: 28px;
+    height: 28px;
+    fill: #004c92; /* أزرق */
+    filter: drop-shadow(0 0 1px rgba(255, 106, 0, 0.8));
+  }
+
+  /* رسالة التنبيه */
+  .apps-notification {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    background: #ff6a00;
+    color: white;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    box-shadow: 0 6px 20px rgba(255, 106, 0, 0.6);
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    user-select: none;
+    transition: opacity 1s ease, transform 50s ease;
+    z-index: 9998;
+  }
+  .apps-notification.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  /* صندوق التحميل مع تصغير 6 درجات (scale 0.94) */
+  .apps-download-box {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(255, 106, 0, 0.4);
+    padding: 16px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    opacity: 0;
+    transform: translateY(20px) scale(0.94);
+    pointer-events: none;
+    width: 260px;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    z-index: 9999;
+  }
+  .apps-download-box.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+
+  /* الأزرار مع تصغير 4 درجات (scale 0.96) */
+  .apps-download-box a {
+    display: block;
+    background: #004c92; /* أزرق غامق */
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 700;
+    padding: 10px 0;
+    border-radius: 30px;
+    box-shadow: 0 4px 10px rgba(255, 106, 0, 0.7); /* ظل برتقالي */
+    transition: background 0.3s, transform 0.3s;
+    transform: scale(0.96);
+  }
+  .apps-download-box a:hover {
+    background: #0066cc;
+    transform: scale(1);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 480px) {
+    .apps-float-icon {
+      width: 48px;
+      height: 48px;
+    }
+    .apps-float-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+    .apps-notification {
+      bottom: 75px;
+      right: 16px;
+      font-size: 13px;
+      padding: 6px 14px;
+    }
+    .apps-download-box {
+      width: 220px;
+      padding: 14px 20px;
+      bottom: 110px;
+      right: 16px;
+    }
+    .apps-download-box a {
+      padding: 8px 0;
+      font-size: 14px;
+    }
+  }
+</style>
+
+<div class="apps-float-icon" aria-label="Download Apps" role="button" tabindex="0" title="Download Apps">
+  <!-- أيقونة مور ثلاث نقاط -->
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" >
+    <circle cx="5" cy="12" r="2"/>
+    <circle cx="12" cy="12" r="2"/>
+    <circle cx="19" cy="12" r="2"/>
+  </svg>
+</div>
+
+<div class="apps-notification" role="alert" aria-live="assertive" aria-atomic="true" id="apps-notification">
+  Download Apps !
+</div>
+
+<div class="apps-download-box" id="apps-download-box" aria-hidden="true">
+  <a href="https://apps.apple.com/jo/app/hieasy/id1317642218" target="_blank" rel="noopener noreferrer" aria-label="Download HiEasy on App Store">HiEasy (App Store)</a>
+  <a href="https://apps.apple.com/jo/app/hiai/id1450485205" target="_blank" rel="noopener noreferrer" aria-label="Download HiAi on App Store">HiAi (App Store)</a>
+  <a href="https://play.google.com/store/apps/details?id=com.zwcode.p6slite" target="_blank" rel="noopener noreferrer" aria-label="Download HiEasy on Google Play">HiEasy (Google Play)</a>
+  <a href="https://play.google.com/store/apps/details?id=com.zwcode.hiai" target="_blank" rel="noopener noreferrer" aria-label="Download HiAi on Google Play">HiAi (Google Play)</a>
+</div>
+
+<!-- ترخيص الأيقونة -->
+<a href="https://www.flaticon.com/free-icons/more" title="more icons" target="_blank" style="position: fixed; bottom: 10px; right: 20px; font-size: 10px; color: #004c92; z-index: 9999; text-decoration:none; font-family: Arial, sans-serif;">
+  More icons created by Anggara - Flaticon
+</a>
+
+<script>
+  const icon = document.querySelector('.apps-float-icon');
+  const notification = document.getElementById('apps-notification');
+  const downloadBox = document.getElementById('apps-download-box');
+
+  let open = false;
+
+  function toggleAppsBox() {
+    open = !open;
+
+    if (open) {
+      notification.classList.add('visible');
+      downloadBox.classList.add('visible');
+      downloadBox.setAttribute('aria-hidden', 'false');
+    } else {
+      notification.classList.remove('visible');
+      downloadBox.classList.remove('visible');
+      downloadBox.setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  icon.addEventListener('click', toggleAppsBox);
+
+  // دعم لوحة المفاتيح
+  icon.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleAppsBox();
+    }
+  });
+
+  // إظهار رسالة التنبيه تلقائياً عند تحميل الصفحة 3 ثواني ثم تختفي
+  window.addEventListener('load', () => {
+    notification.classList.add('visible');
+    setTimeout(() => {
+      notification.classList.remove('visible');
+    }, 7000);
+  });
+    function toggleMenu() {
+    document.getElementById('nav-menu').classList.toggle('active');
+  }
+</script>
+
+  </body>
+</html>

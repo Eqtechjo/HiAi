@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About Us - HiAi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #f2f6fa;
+    color: #1c1c1c;
+
+    scrollbar-width: thin;
+    scrollbar-color: #004c92 #e0e6ed;
+  }
+body, html {
+  overflow-x: hidden;
+}
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #e0e6ed;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #004c92;
+    border-radius: 10px;
+    border: 2px solid #e0e6ed;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #ffa726;
+  }
+
+  header {
+    background: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    flex-wrap: wrap;
+  }
+
+  header img {
+    height: 50px;
+  }
+
+  nav {
+    display: flex;
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+  }
+
+  nav a {
+    text-decoration: none;
+    color: #004c92;
+    font-weight: 600;
+    font-size: 15px;
+    transition: color 0.3s;
+  }
+
+  nav a:hover {
+    color: #ffa726;
+  }
+
+  .cta-btn {
+    background: #004c92;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background 0.3s;
+  }
+
+  .cta-btn:hover {
+    background: #ffa726;
+    color: #fff;
+  }
+
+  .menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 4px;
+  }
+
+  .menu-toggle div {
+    width: 25px;
+    height: 3px;
+    background-color: #004c92;
+    border-radius: 2px;
+    transition: 0.3s;
+  }
+
+  @media (max-width: 768px) {
+    nav {
+      width: 100%;
+      justify-content: flex-end;
+    }
+
+    nav ul {
+      flex-direction: column;
+      width: 100%;
+      display: none;
+      background-color: #fff;
+      margin-top: 10px;
+      border-top: 1px solid #eee;
+      padding: 20px 0;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+      animation: slideDown 0.3s ease;
+      align-items: flex-end; /* قوائم من اليمين */
+      text-align: right;
+    }
+
+    nav ul.active {
+      display: flex;
+    }
+
+    .menu-toggle {
+      display: flex;
+    }
+
+    .cta-btn {
+      display: none; /* إخفاء الزر على الموبايل والتابلت */
+    }
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+    /* بانر About Us */
+    .banner {
+      position: relative;
+      width: 100%;
+      height: 250px;
+      background: url('https://res.cloudinary.com/dcbxuax2c/image/upload/v1752717615/top-artificial-intelligence-companies-of-2022_kl1tam.jpg') center/cover no-repeat;
+      opacity: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 1.5s ease;
+      border-radius: 10px;
+      margin: 40px auto 60px;
+      max-width: 1200px;
+    }
+    .banner.visible {
+      opacity: 1;
+    }
+    .banner h1 {
+      color: white;
+      font-size: 48px;
+      font-weight: 700;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+      user-select: none;
+    }
+    @media (max-width: 600px) {
+      .banner {
+        height: 180px;
+        margin: 20px auto 40px;
+      }
+      .banner h1 {
+        font-size: 32px;
+      }
+    }
+
+    /* قسم About Us */
+    .about-section {
+      max-width: 900px;
+      background: white;
+      margin: 0 auto 80px;
+      padding: 60px 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 25px rgba(0, 76, 146, 0.15);
+      text-align: center;
+      opacity: 0;
+      transform: scale(0.95);
+      transition: all 1s ease-out;
+    }
+
+    .about-section.visible {
+      opacity: 1 !important;
+      transform: scale(1) !important;
+    }
+
+    .about-section h1 {
+      color: #004c92;
+      font-weight: 700;
+      font-size: 36px;
+      margin-bottom: 30px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      display: none; /* لأن العنوان موجود في البانر */
+    }
+
+    .about-section p {
+      font-size: 18px;
+      margin-bottom: 24px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      color: #333333;
+    }
+
+    .about-section p strong {
+      color: #004c92;
+      font-weight: 600;
+      font-size: 20px;
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    .highlight {
+      color: #ffa726;
+      font-weight: 700;
+    }
+
+    @media (max-width: 600px) {
+      .about-section {
+        padding: 40px 20px;
+      }
+      .about-section p {
+        font-size: 16px;
+      }
+    }
+          footer {
+        background: #004c92;
+        color: white;
+        padding: 40px 60px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+      footer .info, footer .social {
+        flex: 1 1 300px;
+      }
+      footer a {
+        color: white;
+        text-decoration: none;
+        display: block;
+        margin-bottom: 10px;
+      }
+      footer a i {
+        margin-right: 8px;
+      }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="https://res.cloudinary.com/dcbxuax2c/image/upload/v1752426303/%D9%8B_unn6mp_epv4pk.png" alt="Logo">
+
+  <div class="menu-toggle" onclick="toggleMenu()">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+
+  <nav>
+    <ul id="nav-menu">
+  <li><a href="index.html">Home</a></li>
+  <li><a href="products.html">Products</a></li>
+  <li><a href="contact.html">Contact</a></li>
+  <li><a href="about.html">About</a></li>
+  <li><a href="video-gallery.html">Video gallery</a></li>
+</ul>
+  </nav>
+
+  <a href="https://forms.gle/1pYT5ncYJcAn7agcA" class="cta-btn">Get a Quote</a>
+</header>
+
+
+<div class="banner" role="banner" aria-label="About Us Banner">
+  <h1>About Us</h1>
+</div>
+
+<section id="about" class="about-section" aria-label="About Us HiAi">
+  <p>
+    <strong>Navigating Innovations:</strong>
+    HiAi began with a strong foundation in professional video surveillance products.
+    By 2019, while still maintaining our initial offerings, we ventured into smart home security,
+    steered by our vision-centered AIoT platform.
+  </p>
+  <p>
+    <strong>Catering to Distinct Demands:</strong>
+    For our home users, we address the need for straightforward, user-friendly security solutions
+    complemented by elements of social entertainment.
+    For our small-to-medium business clientele, we prioritize simple yet cost-effective security monitoring solutions.
+  </p>
+  <p>
+    <strong>Commitment to Quality:</strong>
+    Our relentless pursuit of quality has earned us esteemed certifications such as ISO9001, ISO14001,
+    BSCI, CE, FCC, and RoHS.
+    Powering this commitment is our robust team of over 300 professionals,
+    ensuring we uphold the highest standards in everything we do.
+  </p>
+  <p>
+    <strong>Our Ethos:</strong>
+    <span class="highlight">“Smart security, better life”</span> encapsulates our mission.
+    Our endeavor is to incorporate cutting-edge technology smoothly into everyday life,
+    continually enhancing standards of security and ease.
+  </p>
+  <p>
+    Embark with HiAi, where innovation aligns seamlessly with today’s diverse requirements.
+  </p>
+</section>
+<footer>
+  <div class="info">
+    <h3>HiAi Contact</h3>
+    <a href="tel:0798547669"><i class="fas fa-phone"></i> 0798547669</a>
+    <a href="mailto:info@hiai-ai.com"><i class="fas fa-envelope"></i> info@hiai-ai.com</a>
+    <a href="https://wa.me/message/KSOZNQSSTILKN1"><i class="fab fa-whatsapp"></i> WhatsApp Chat</a>
+  </div>
+  <div class="social">
+    <h3>Follow Us</h3>
+    <a href="https://www.facebook.com/share/16eZW4zfCV/?mibextid=wwXIfr"><i class="fab fa-facebook"></i> Facebook</a>
+  </div>
+
+  <div style="text-align:center; margin-top:40px;">
+    <p style="margin-bottom:8px; font-family: Arial, sans-serif; font-size:14px; color:#aaa;">
+      Website developed by
+    </p>
+<img
+  src="https://res.cloudinary.com/dcbxuax2c/image/upload/v1751767267/Untitled_design_46_l0l0mt.png"
+  alt="EQtech Jordan Logo"
+  width="70"
+  style="display:inline-block; 
+         box-shadow: 0 0 0px0px rgba(255, 255, 255, 0.15);"
+/>
+
+  </div>
+</footer>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const header = document.querySelector('header');
+    const banner = document.querySelector('.banner');
+    const aboutSection = document.querySelector('.about-section');
+
+    // تأثير الهيدر عند التمرير
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 10) {
+        header.style.boxShadow = '0 10px 30px rgba(0, 76, 146, 0.3)';
+        header.style.transform = 'translateY(-4px)';
+      } else {
+        header.style.boxShadow = '0 2px 12px rgba(0, 0, 0, 0.08)';
+        header.style.transform = 'translateY(0)';
+      }
+    });
+
+    // تأثير فيد إن للبانر بعد تحميل الصفحة
+    setTimeout(() => {
+      banner.classList.add('visible');
+    }, 200);
+
+    // تأثير ظهور قسم About Us عند التمرير
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          aboutSection.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    observer.observe(aboutSection);
+  });
+    function toggleMenu() {
+    document.getElementById('nav-menu').classList.toggle('active');
+  }
+</script>
+</body>
+    <style>
+  /* أيقونة المور دائرية */
+  .apps-float-icon {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: pulse 2.5s infinite;
+    background: transparent;
+    transition: box-shadow 0.3s ease;
+    z-index: 9999;
+  }
+  .apps-float-icon:hover {
+    box-shadow: 0 8px 25px rgba(255, 106, 0, 0.8);
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 6px 20px rgba(255, 106, 0, 0.7); }
+    50% { box-shadow: 0 10px 30px rgba(255, 106, 0, 1); }
+  }
+
+  /* أيقونة مور (الثلاث نقاط) */
+  .apps-float-icon svg {
+    width: 28px;
+    height: 28px;
+    fill: #004c92; /* أزرق */
+    filter: drop-shadow(0 0 1px rgba(255, 106, 0, 0.8));
+  }
+
+  /* رسالة التنبيه */
+  .apps-notification {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    background: #ff6a00;
+    color: white;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    box-shadow: 0 6px 20px rgba(255, 106, 0, 0.6);
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    user-select: none;
+    transition: opacity 1s ease, transform 50s ease;
+    z-index: 9998;
+  }
+  .apps-notification.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  /* صندوق التحميل مع تصغير 6 درجات (scale 0.94) */
+  .apps-download-box {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(255, 106, 0, 0.4);
+    padding: 16px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    opacity: 0;
+    transform: translateY(20px) scale(0.94);
+    pointer-events: none;
+    width: 260px;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    z-index: 9999;
+  }
+  .apps-download-box.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+
+  /* الأزرار مع تصغير 4 درجات (scale 0.96) */
+  .apps-download-box a {
+    display: block;
+    background: #004c92; /* أزرق غامق */
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 700;
+    padding: 10px 0;
+    border-radius: 30px;
+    box-shadow: 0 4px 10px rgba(255, 106, 0, 0.7); /* ظل برتقالي */
+    transition: background 0.3s, transform 0.3s;
+    transform: scale(0.96);
+  }
+  .apps-download-box a:hover {
+    background: #0066cc;
+    transform: scale(1);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 480px) {
+    .apps-float-icon {
+      width: 48px;
+      height: 48px;
+    }
+    .apps-float-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+    .apps-notification {
+      bottom: 75px;
+      right: 16px;
+      font-size: 13px;
+      padding: 6px 14px;
+    }
+    .apps-download-box {
+      width: 220px;
+      padding: 14px 20px;
+      bottom: 110px;
+      right: 16px;
+    }
+    .apps-download-box a {
+      padding: 8px 0;
+      font-size: 14px;
+    }
+  }
+</style>
+
+<div class="apps-float-icon" aria-label="Download Apps" role="button" tabindex="0" title="Download Apps">
+  <!-- أيقونة مور ثلاث نقاط -->
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" >
+    <circle cx="5" cy="12" r="2"/>
+    <circle cx="12" cy="12" r="2"/>
+    <circle cx="19" cy="12" r="2"/>
+  </svg>
+</div>
+
+<div class="apps-notification" role="alert" aria-live="assertive" aria-atomic="true" id="apps-notification">
+  Download Apps !
+</div>
+
+<div class="apps-download-box" id="apps-download-box" aria-hidden="true">
+  <a href="https://apps.apple.com/jo/app/hieasy/id1317642218" target="_blank" rel="noopener noreferrer" aria-label="Download HiEasy on App Store">HiEasy (App Store)</a>
+  <a href="https://apps.apple.com/jo/app/hiai/id1450485205" target="_blank" rel="noopener noreferrer" aria-label="Download HiAi on App Store">HiAi (App Store)</a>
+  <a href="https://play.google.com/store/apps/details?id=com.zwcode.p6slite" target="_blank" rel="noopener noreferrer" aria-label="Download HiEasy on Google Play">HiEasy (Google Play)</a>
+  <a href="https://play.google.com/store/apps/details?id=com.zwcode.hiai" target="_blank" rel="noopener noreferrer" aria-label="Download HiAi on Google Play">HiAi (Google Play)</a>
+</div>
+
+<!-- ترخيص الأيقونة -->
+<a href="https://www.flaticon.com/free-icons/more" title="more icons" target="_blank" style="position: fixed; bottom: 10px; right: 20px; font-size: 10px; color: #004c92; z-index: 9999; text-decoration:none; font-family: Arial, sans-serif;">
+  More icons created by Anggara - Flaticon
+</a>
+
+<script>
+  const icon = document.querySelector('.apps-float-icon');
+  const notification = document.getElementById('apps-notification');
+  const downloadBox = document.getElementById('apps-download-box');
+
+  let open = false;
+
+  function toggleAppsBox() {
+    open = !open;
+
+    if (open) {
+      notification.classList.add('visible');
+      downloadBox.classList.add('visible');
+      downloadBox.setAttribute('aria-hidden', 'false');
+    } else {
+      notification.classList.remove('visible');
+      downloadBox.classList.remove('visible');
+      downloadBox.setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  icon.addEventListener('click', toggleAppsBox);
+
+  // دعم لوحة المفاتيح
+  icon.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleAppsBox();
+    }
+  });
+
+  // إظهار رسالة التنبيه تلقائياً عند تحميل الصفحة 3 ثواني ثم تختفي
+  window.addEventListener('load', () => {
+    notification.classList.add('visible');
+    setTimeout(() => {
+      notification.classList.remove('visible');
+    }, 7000);
+  });
+</script>
+
