@@ -294,7 +294,7 @@ body, html {
 }
 
 /* Responsive Grid */
-@media (max-width: 1200px) {
+@media (max-width: 1000px) {
   .products-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -315,6 +315,20 @@ body, html {
 .features-list li {
   margin-bottom: 8px;
   line-height: 1.6;
+}
+.product-card {
+  overflow: hidden; /* يمنع الصورة من الخروج من الكارد */
+  position: relative;
+}
+
+.product-card img {
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.product-card img.zoomed {
+  transform: scale(1.2); /* زوم خفيف */
 }
 
             footer {
@@ -602,6 +616,11 @@ body, html {
   function toggleMenu() {
     document.getElementById('nav-menu').classList.toggle('active');
   }
+  document.querySelectorAll('.product-card img').forEach(img => {
+    img.addEventListener('click', () => {
+      img.classList.toggle('zoomed');
+    });
+  });
 </script>
 
 </body>
