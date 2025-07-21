@@ -351,6 +351,112 @@ body, html {
       footer a i {
         margin-right: 8px;
       }
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f4f6f8;
+  color: #333;
+}
+
+.filter-search-container {
+  max-width: 1200px;
+  margin: 40px auto 20px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filter-group,
+.search-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 250px;
+}
+
+.filter-group label {
+  font-weight: 600;
+  color: #004c92;
+}
+
+.filter-group select,
+.search-group input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.search-group button {
+  padding: 12px 20px;
+  background-color: #004c92;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search-group button:hover {
+  background-color: #00386d;
+}
+
+.filter-group select:focus,
+.search-group input:focus {
+  border-color: #004c92;
+  box-shadow: 0 0 6px rgba(0, 76, 146, 0.2);
+}
+
+/* Cards */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+.product-card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  transition: transform 0.2s;
+}
+
+.product-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .filter-search-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-group,
+  .search-group {
+    width: 100%;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -386,7 +492,23 @@ body, html {
     </p>
   </div>
 </div>
+<div class="filter-search-container">
+  <div class="filter-group">
+    <label for="category-filter">Category:</label>
+    <select id="category-filter">
+      <option value="all">All</option>
+      <option value="recorder">Recorder</option>
+      <option value="ipc">IP Camera</option>
+      <option value="switch">Switch</option>
+      <option value="accessory">Accessories</option>
+    </select>
+  </div>
 
+  <div class="search-group">
+    <input type="text" id="search-input" placeholder="🔍 Search products...">
+    <button id="search-button">Search</button>
+  </div>
+</div>
 <div class="products-grid">
   
   <!-- Product 1 -->
@@ -529,7 +651,7 @@ body, html {
   </div>
   <div class="social">
     <h3>Follow Us</h3>
-    <a href="https://www.facebook.com/share/16eZW4zfCV/?mibextid=wwXIfr"><i class="fab fa-facebook"></i> Facebook</a>
+    <a href="https://www.facebook.com/share/19D5Ny6An8/"><i class="fab fa-facebook"></i> Facebook</a>
   </div>
 
   <div style="text-align:center; margin-top:40px;">
@@ -621,6 +743,43 @@ body, html {
       img.classList.toggle('zoomed');
     });
   });
+document.addEventListener("DOMContentLoaded", () => {
+  const categoryFilter = document.getElementById("category-filter");
+  const searchInput = document.getElementById("search-input");
+  const searchButton = document.getElementById("search-button");
+  const productCards = document.querySelectorAll(".product-card");
+
+  const categoryMap = {
+    0: "ipc",
+    1: "ipc",
+    2: "ipc",
+    3: "ipc",
+    4: "recorder",
+    5: "recorder"
+  };
+
+  productCards.forEach((card, index) => {
+    card.setAttribute("data-category", categoryMap[index]);
+  });
+
+  function filterProducts() {
+    const selectedCategory = categoryFilter.value;
+    const searchText = searchInput.value.toLowerCase();
+
+    productCards.forEach(card => {
+      const category = card.dataset.category;
+      const text = card.textContent.toLowerCase();
+
+      const matchesCategory = selectedCategory === "all" || category === selectedCategory;
+      const matchesSearch = text.includes(searchText);
+
+      card.style.display = matchesCategory && matchesSearch ? "flex" : "none";
+    });
+  }
+
+  searchButton.addEventListener("click", filterProducts);
+});
+
 </script>
 
 </body>
