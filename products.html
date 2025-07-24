@@ -988,24 +988,38 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 200);
   }
 });
-  const storedProducts = JSON.parse(localStorage.getItem("products")) || [];
+ const storedProducts = JSON.parse(localStorage.getItem("products")) || [];
 
-  function createProductCard(product) {
-    return `
-      <section class="product-card">
-        <img src="${product.image}" alt="${product.name}">
-        <div class="product-content">
-          <h2 class="product-title">${product.name}</h2>
-          <div class="product-subtitle">${product.description}</div>
-          <a href="${product.pdf}" target="_blank" class="download-btn">Download Details</a>
-        </div>
-      </section>
-    `;
+// تحويل Data URL إلى Blob URL
+function createBlobURLFromDataURL(dataURL, mimeType) {
+  const base64Data = dataURL.split(',')[1];
+  const byteCharacters = atob(base64Data);
+  const byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
   }
+  const byteArray = new Uint8Array(byteNumbers);
+  const blob = new Blob([byteArray], { type: mimeType });
+  return URL.createObjectURL(blob);
+}
 
-  const container = document.querySelector(".products-grid");
-  storedProducts.forEach(product => {
-    container.innerHTML += createProductCard(product);
-  });
+function createProductCard(product) {
+  const pdfBlobURL = createBlobURLFromDataURL(product.pdf, 'application/pdf');
+  return `
+    <section class="product-card">
+      <img src="${product.image}" alt="${product.name}">
+      <div class="product-content">
+        <h2 class="product-title">${product.name}</h2>
+        <div class="product-subtitle">${product.description}</div>
+        <a href="${pdfBlobURL}" download="${product.name}.pdf" class="download-btn">Download Details</a>
+      </div>
+    </section>
+  `;
+}
+
+const container = document.querySelector(".products-grid");
+storedProducts.forEach(product => {
+  container.innerHTML += createProductCard(product);
+});
 </script>
 </html>
