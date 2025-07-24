@@ -143,25 +143,28 @@
       });
     }
 
-    function renderProducts() {
-      const list = document.getElementById("products-list");
-      list.innerHTML = "";
-      products.forEach((product, index) => {
-        const card = document.createElement("div");
-        card.className = "product-card";
-        card.innerHTML = `
-          <img src="${product.image}" alt="Product Image">
-          <h3>${product.name}</h3>
-          <p>${product.description}</p>
-          <a href="${product.pdf}" download="${product.name}.pdf" title="Download PDF" class="download-btn">📄 Download PDF</a>
-          <div class="actions">
+function renderProducts() {
+  const list = document.getElementById("products-list");
+  list.innerHTML = "";
+  products.forEach((product, index) => {
+    list.innerHTML += `
+      <section class="product-card">
+        <img src="${product.image}" alt="${product.name}">
+        <div class="product-content" style="text-align:left;">
+          <h2 class="product-title">${product.name}</h2>
+          <div class="product-subtitle">${product.description}</div>
+          <a href="${product.pdf}" download="${product.name}.pdf" target="_blank" class="download-btn" style="display:inline-block; margin-top:10px; text-align:left;">
+            📄 Download PDF
+          </a>
+          <div class="actions" style="margin-top:10px; text-align:right;">
             <button class="edit-btn" onclick="editProduct(${index})">Edit</button>
             <button onclick="deleteProduct(${index})">Delete</button>
           </div>
-        `;
-        list.appendChild(card);
-      });
-    }
+        </div>
+      </section>
+    `;
+  });
+}
 
     async function handleFormSubmit(e) {
       e.preventDefault();
