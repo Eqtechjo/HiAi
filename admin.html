@@ -2,16 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>لوحة التحكم - المنتجات</title>
+  <title>HiAi Admin Panel</title>
   <style>
     body {
       font-family: sans-serif;
-      background: #f9f9f9;
       padding: 20px;
+      background-color: #f9f9f9;
     }
     h1 {
-      text-align: center;
-      margin-bottom: 20px;
+      color: #333;
     }
     form {
       background: #fff;
@@ -23,151 +22,146 @@
     input, textarea {
       display: block;
       width: 100%;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       padding: 8px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
-    label {
-      margin-top: 10px;
-      font-weight: bold;
     }
     button {
       padding: 10px 15px;
-      background: green;
+      background: #007bff;
       color: white;
       border: none;
-      border-radius: 5px;
       cursor: pointer;
+      margin-right: 10px;
     }
-    .product {
+    .products-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .product-card {
       background: #fff;
       padding: 10px;
-      margin-bottom: 15px;
-      border: 1px solid #ddd;
       border-radius: 6px;
+      width: 250px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      position: relative;
     }
-    .product img {
-      max-width: 100px;
-      margin-bottom: 10px;
+    .product-card img {
+      width: 100%;
+      max-height: 150px;
+      object-fit: contain;
     }
-    .product-actions button {
-      margin-right: 5px;
-      background: #007bff;
+    .actions {
+      margin-top: 10px;
     }
-    .product-actions .delete {
+    .actions button {
       background: #dc3545;
+    }
+    .actions .edit-btn {
+      background: #28a745;
     }
   </style>
 </head>
 <body>
 
-<h1>لوحة التحكم - المنتجات</h1>
+  <h1>🛠️ HiAi Admin - Add Product</h1>
 
-<form id="product-form">
-  <input type="hidden" id="edit-index">
-  
-  <label>📸 صورة المنتج</label>
-  <input type="file" id="image" accept="image/*" required>
-  
-  <label>📛 اسم المنتج</label>
-  <input type="text" id="name" required>
-  
-  <label>📝 وصف المنتج</label>
-  <textarea id="description" rows="3" required></textarea>
-  
-  <label>📎 ملف PDF (تعريف المنتج)</label>
-  <input type="file" id="pdf" accept="application/pdf" required>
-  
-  <button type="submit">💾 حفظ المنتج</button>
-</form>
+  <form id="product-form">
+    <input type="file" id="image" accept="image/*" required>
+    <input type="text" id="name" placeholder="Product Name" required>
+    <textarea id="description" placeholder="Product Description" required></textarea>
+    <input type="file" id="pdf" accept="application/pdf" required>
+    <button type="submit">Add Product</button>
+    <button type="button" id="cancelEdit" style="display:none;">Cancel Edit</button>
+  </form>
 
-<div id="products-list"></div>
+  <h2>🗂️ Product List</h2>
+  <div class="products-list" id="products-list"></div>
 
-<script>
-  let products = JSON.parse(localStorage.getItem("products")) || [];
+  <script>
+    let products = JSON.parse(localStorage.getItem("products")) || [];
+    let editIndex = -1;
 
-  function saveToStorage() {
-    localStorage.setItem("products", JSON.stringify(products));
-  }
-
-  function renderProducts() {
-    const container = document.getElementById("products-list");
-    container.innerHTML = "";
-    products.forEach((product, index) => {
-      const div = document.createElement("div");
-      div.className = "product";
-      div.innerHTML = `
-        <img src="${product.image}" alt="Product Image">
-        <h3>${product.name}</h3>
-        <p>${product.description}</p>
-        <a href="${product.pdf}" target="_blank">📄 عرض ملف PDF</a>
-        <div class="product-actions">
-          <button onclick="editProduct(${index})">✏️ تعديل</button>
-          <button class="delete" onclick="deleteProduct(${index})">🗑️ حذف</button>
-        </div>
-      `;
-      container.appendChild(div);
-    });
-  }
-
-  function convertToBase64(file, callback) {
-    const reader = new FileReader();
-    reader.onload = () => callback(reader.result);
-    reader.readAsDataURL(file);
-  }
-
-  document.getElementById("product-form").addEventListener("submit", function (e) {
-    e.preventDefault();
-    
-    const imageInput = document.getElementById("image");
-    const pdfInput = document.getElementById("pdf");
-    const name = document.getElementById("name").value;
-    const description = document.getElementById("description").value;
-    const editIndex = document.getElementById("edit-index").value;
-
-    if (!imageInput.files[0] || !pdfInput.files[0]) {
-      alert("يرجى اختيار صورة وملف PDF");
-      return;
+    function readFileAsDataURL(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = e => resolve(e.target.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
     }
 
-    convertToBase64(imageInput.files[0], (imageBase64) => {
-      convertToBase64(pdfInput.files[0], (pdfBase64) => {
-        const productData = { image: imageBase64, name, description, pdf: pdfBase64 };
-
-        if (editIndex === "") {
-          products.push(productData);
-        } else {
-          products[parseInt(editIndex)] = productData;
-        }
-
-        saveToStorage();
-        renderProducts();
-        this.reset();
-        document.getElementById("edit-index").value = "";
+    function renderProducts() {
+      const list = document.getElementById("products-list");
+      list.innerHTML = "";
+      products.forEach((product, index) => {
+        const card = document.createElement("div");
+        card.className = "product-card";
+        card.innerHTML = `
+          <img src="${product.image}" alt="Product Image">
+          <h3>${product.name}</h3>
+          <p>${product.description}</p>
+          <a href="${product.pdf}" target="_blank">📄 View PDF</a>
+          <div class="actions">
+            <button class="edit-btn" onclick="editProduct(${index})">Edit</button>
+            <button onclick="deleteProduct(${index})">Delete</button>
+          </div>
+        `;
+        list.appendChild(card);
       });
-    });
-  });
+    }
 
-  function editProduct(index) {
-    const product = products[index];
-    document.getElementById("name").value = product.name;
-    document.getElementById("description").value = product.description;
-    document.getElementById("edit-index").value = index;
+    async function handleFormSubmit(e) {
+      e.preventDefault();
+      const imageFile = document.getElementById("image").files[0];
+      const name = document.getElementById("name").value;
+      const description = document.getElementById("description").value;
+      const pdfFile = document.getElementById("pdf").files[0];
 
-    alert("❗لا يمكن تعديل الصورة أو ملف PDF بعد الحفظ. لحذف المنتج وإعادة إضافته، اضغط حذف.");
-  }
+      if (!imageFile || !pdfFile) return alert("Please choose both image and PDF.");
 
-  function deleteProduct(index) {
-    if (confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
-      products.splice(index, 1);
-      saveToStorage();
+      const imageData = await readFileAsDataURL(imageFile);
+      const pdfData = await readFileAsDataURL(pdfFile);
+
+      const newProduct = { image: imageData, name, description, pdf: pdfData };
+
+      if (editIndex > -1) {
+        products[editIndex] = newProduct;
+        editIndex = -1;
+        document.getElementById("cancelEdit").style.display = "none";
+      } else {
+        products.push(newProduct);
+      }
+
+      localStorage.setItem("products", JSON.stringify(products));
+      e.target.reset();
       renderProducts();
     }
-  }
 
-  renderProducts();
-</script>
+    function deleteProduct(index) {
+      if (!confirm("Are you sure?")) return;
+      products.splice(index, 1);
+      localStorage.setItem("products", JSON.stringify(products));
+      renderProducts();
+    }
 
+    function editProduct(index) {
+      const product = products[index];
+      document.getElementById("name").value = product.name;
+      document.getElementById("description").value = product.description;
+      editIndex = index;
+      document.getElementById("cancelEdit").style.display = "inline-block";
+      alert("⚠️ قم بإعادة رفع الصورة وملف PDF لتحديثهما");
+    }
+
+    document.getElementById("product-form").addEventListener("submit", handleFormSubmit);
+    document.getElementById("cancelEdit").addEventListener("click", () => {
+      editIndex = -1;
+      document.getElementById("product-form").reset();
+      document.getElementById("cancelEdit").style.display = "none";
+    });
+
+    renderProducts();
+  </script>
 </body>
 </html>
