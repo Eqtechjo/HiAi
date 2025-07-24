@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>لوحة التحكم - المنتجات</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    form {
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+    input, textarea {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    label {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    button {
+      padding: 10px 15px;
+      background: green;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .product {
+      background: #fff;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+    .product img {
+      max-width: 100px;
+      margin-bottom: 10px;
+    }
+    .product-actions button {
+      margin-right: 5px;
+      background: #007bff;
+    }
+    .product-actions .delete {
+      background: #dc3545;
+    }
+  </style>
+</head>
+<body>
+
+<h1>لوحة التحكم - المنتجات</h1>
+
+<form id="product-form">
+  <input type="hidden" id="edit-index">
+  
+  <label>📸 صورة المنتج</label>
+  <input type="file" id="image" accept="image/*" required>
+  
+  <label>📛 اسم المنتج</label>
+  <input type="text" id="name" required>
+  
+  <label>📝 وصف المنتج</label>
+  <textarea id="description" rows="3" required></textarea>
+  
+  <label>📎 ملف PDF (تعريف المنتج)</label>
+  <input type="file" id="pdf" accept="application/pdf" required>
+  
+  <button type="submit">💾 حفظ المنتج</button>
+</form>
+
+<div id="products-list"></div>
+
+<script>
+  let products = JSON.parse(localStorage.getItem("products")) || [];
+
+  function saveToStorage() {
+    localStorage.setItem("products", JSON.stringify(products));
+  }
+
+  function renderProducts() {
+    const container = document.getElementById("products-list");
+    container.innerHTML = "";
+    products.forEach((product, index) => {
+      const div = document.createElement("div");
+      div.className = "product";
+      div.innerHTML = `
+        <img src="${product.image}" alt="Product Image">
+        <h3>${product.name}</h3>
+        <p>${product.description}</p>
+        <a href="${product.pdf}" target="_blank">📄 عرض ملف PDF</a>
+        <div class="product-actions">
+          <button onclick="editProduct(${index})">✏️ تعديل</button>
+          <button class="delete" onclick="deleteProduct(${index})">🗑️ حذف</button>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  function convertToBase64(file, callback) {
+    const reader = new FileReader();
+    reader.onload = () => callback(reader.result);
+    reader.readAsDataURL(file);
+  }
+
+  document.getElementById("product-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    
+    const imageInput = document.getElementById("image");
+    const pdfInput = document.getElementById("pdf");
+    const name = document.getElementById("name").value;
+    const description = document.getElementById("description").value;
+    const editIndex = document.getElementById("edit-index").value;
+
+    if (!imageInput.files[0] || !pdfInput.files[0]) {
+      alert("يرجى اختيار صورة وملف PDF");
+      return;
+    }
+
+    convertToBase64(imageInput.files[0], (imageBase64) => {
+      convertToBase64(pdfInput.files[0], (pdfBase64) => {
+        const productData = { image: imageBase64, name, description, pdf: pdfBase64 };
+
+        if (editIndex === "") {
+          products.push(productData);
+        } else {
+          products[parseInt(editIndex)] = productData;
+        }
+
+        saveToStorage();
+        renderProducts();
+        this.reset();
+        document.getElementById("edit-index").value = "";
+      });
+    });
+  });
+
+  function editProduct(index) {
+    const product = products[index];
+    document.getElementById("name").value = product.name;
+    document.getElementById("description").value = product.description;
+    document.getElementById("edit-index").value = index;
+
+    alert("❗لا يمكن تعديل الصورة أو ملف PDF بعد الحفظ. لحذف المنتج وإعادة إضافته، اضغط حذف.");
+  }
+
+  function deleteProduct(index) {
+    if (confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
+      products.splice(index, 1);
+      saveToStorage();
+      renderProducts();
+    }
+  }
+
+  renderProducts();
+</script>
+
+</body>
+</html>
