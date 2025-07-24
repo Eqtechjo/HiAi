@@ -988,6 +988,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 200);
   }
 });
+  const storedProducts = JSON.parse(localStorage.getItem("products")) || [];
 
+  function createProductCard(product) {
+    return `
+      <section class="product-card">
+        <img src="${product.image}" alt="${product.name}">
+        <div class="product-content">
+          <h2 class="product-title">${product.name}</h2>
+          <div class="product-subtitle">${product.description}</div>
+          <a href="${product.pdf}" target="_blank" class="download-btn">Download Details</a>
+        </div>
+      </section>
+    `;
+  }
+
+  const container = document.querySelector(".products-grid");
+  storedProducts.forEach(product => {
+    container.innerHTML += createProductCard(product);
+  });
 </script>
 </html>
