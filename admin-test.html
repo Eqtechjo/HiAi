@@ -9,97 +9,174 @@
       padding: 20px;
       background-color: #f9f9f9;
     }
-    h1 {
-      color: #333;
-    }
-    form {
-      background: #fff;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
-      max-width: 500px;
-    }
-    label {
-      font-weight: bold;
-      margin-top: 10px;
-      display: block;
-    }
-    input, textarea {
-      display: block;
-      width: 100%;
-      margin-bottom: 12px;
-      padding: 8px;
-      box-sizing: border-box;
-    }
-    button {
-      padding: 10px 15px;
-      background: #007bff;
-      color: white;
-      border: none;
-      cursor: pointer;
-      margin-right: 10px;
-      border-radius: 4px;
-      font-size: 16px;
-    }
-    button#cancelEdit {
-      background: #6c757d;
-    }
-    .products-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-    .product-card {
-      background: #fff;
-      padding: 10px;
-      border-radius: 6px;
-      width: 250px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .product-card img {
-      width: 100%;
-      max-height: 150px;
-      object-fit: contain;
-      border-radius: 4px;
-      margin-bottom: 8px;
-    }
-    .actions {
-      margin-top: 10px;
-      text-align: right;
-    }
-    .actions button {
-      background: #dc3545;
-      border: none;
-      padding: 6px 12px;
-      color: white;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-      margin-left: 5px;
-    }
-    .actions .edit-btn {
-      background: #28a745;
-      margin-left: 0;
-    }
-    a.download-btn {
-      display: inline-block;
-      margin-top: 8px;
-      color: #007bff;
-      text-decoration: none;
-      font-weight: bold;
-      text-align: left;
-    }
-    #loading-message {
-      color: #ff6600;
-      font-weight: bold;
-      margin-bottom: 10px;
-      display: none;
-    }
+body {
+  font-family: 'Segoe UI', sans-serif;
+  padding: 30px;
+  background-color: #f4f8fc;
+  color: #333;
+}
+
+h1 {
+  color: #0056b3;
+  margin-bottom: 20px;
+  font-size: 28px;
+}
+
+form {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 86, 179, 0.1);
+  margin-bottom: 40px;
+  max-width: 550px;
+  border-left: 5px solid #007bff;
+}
+
+label {
+  font-weight: 600;
+  margin-top: 12px;
+  display: block;
+  color: #003366;
+}
+
+input, textarea {
+  display: block;
+  width: 100%;
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  border: 1px solid #cfd8e3;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 15px;
+  transition: border 0.2s;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0,123,255,0.2);
+}
+
+button {
+  padding: 10px 18px;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  margin-right: 10px;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+button#cancelEdit {
+  background: #6c757d;
+}
+
+button#cancelEdit:hover {
+  background: #565e64;
+}
+
+.products-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.product-card {
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 10px;
+  width: 270px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+}
+
+.product-card img {
+  width: 100%;
+  max-height: 160px;
+  object-fit: contain;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  background: #f1f1f1;
+}
+
+.product-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #004085;
+  margin-bottom: 4px;
+}
+
+.product-subtitle {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+a.download-btn {
+  display: inline-block;
+  margin-top: 10px;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+a.download-btn:hover {
+  color: #004085;
+}
+
+.actions {
+  margin-top: 12px;
+  text-align: right;
+}
+
+.actions button {
+  background: #dc3545;
+  border: none;
+  padding: 6px 14px;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 6px;
+  transition: background 0.2s;
+}
+
+.actions button:hover {
+  background: #bb2d3b;
+}
+
+.actions .edit-btn {
+  background: #28a745;
+  margin-left: 0;
+}
+
+.actions .edit-btn:hover {
+  background: #218838;
+}
+
+#loading-message {
+  color: #ff6600;
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: none;
+  font-size: 15px;
+}
+
   </style>
 </head>
 <body>
