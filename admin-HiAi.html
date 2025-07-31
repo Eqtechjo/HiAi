@@ -315,8 +315,6 @@ a.download-btn:hover {
 const payload = {
   product: { name, description, image: imageData, pdf: pdfData }
 };
-
-
       try {
         if (editId) {
           await fetch(`${API_URL}/${editId}`, {
