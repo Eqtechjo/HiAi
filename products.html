@@ -862,38 +862,30 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 200);
   }
 });
- const storedProducts = JSON.parse(localStorage.getItem("products")) || [];
+ const container = document.querySelector(".products-grid");
 
-// تحويل Data URL إلى Blob URL
-function createBlobURLFromDataURL(dataURL, mimeType) {
-  const base64Data = dataURL.split(',')[1];
-  const byteCharacters = atob(base64Data);
-  const byteNumbers = new Array(byteCharacters.length);
-  for (let i = 0; i < byteCharacters.length; i++) {
-    byteNumbers[i] = byteCharacters.charCodeAt(i);
-  }
-  const byteArray = new Uint8Array(byteNumbers);
-  const blob = new Blob([byteArray], { type: mimeType });
-  return URL.createObjectURL(blob);
-}
+// استدعاء المنتجات من Sheety API
+fetch("https://api.sheety.co/7a96066cfa7bed25dc8b7979487254db/products/sheet1") // ← غيّر الرابط حسب مشروعك
+  .then(response => response.json())
+  .then(data => {
+    const products = data.products; // ← "products" حسب اسم الجدول داخل Sheety
+    products.forEach(product => {
+      container.innerHTML += `
+        <section class="product-card">
+          <img src="${product.image}" alt="${product.name}">
+          <div class="product-content">
+            <h2 class="product-title">${product.name}</h2>
+            <div class="product-subtitle">${product.description}</div>
+            <a href="${product.pdf}" download="${product.name}.pdf" class="download-btn">Download Details</a>
+          </div>
+        </section>
+      `;
+    });
+  })
+  .catch(error => {
+    console.error("Error loading products:", error);
+    container.innerHTML = "<p style='color:red;'>Failed to load products. Please try again later.</p>";
+  });
 
-function createProductCard(product) {
-  const pdfBlobURL = createBlobURLFromDataURL(product.pdf, 'application/pdf');
-  return `
-    <section class="product-card">
-      <img src="${product.image}" alt="${product.name}">
-      <div class="product-content">
-        <h2 class="product-title">${product.name}</h2>
-        <div class="product-subtitle">${product.description}</div>
-        <a href="${pdfBlobURL}" download="${product.name}.pdf" class="download-btn">Download Details</a>
-      </div>
-    </section>
-  `;
-}
-
-const container = document.querySelector(".products-grid");
-storedProducts.forEach(product => {
-  container.innerHTML += createProductCard(product);
-});
 </script>
 </html>
