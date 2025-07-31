@@ -312,9 +312,10 @@ a.download-btn:hover {
         pdfData = existing?.pdf || "";
       }
 
-      const payload = {
-        sheet1: { name, description, image: imageData, pdf: pdfData }
-      };
+const payload = {
+  product: { name, description, image: imageData, pdf: pdfData }
+};
+
 
       try {
         if (editId) {
