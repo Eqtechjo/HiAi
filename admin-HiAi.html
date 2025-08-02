@@ -199,8 +199,11 @@ form.addEventListener("submit", async function(e) {
   const productId = document.getElementById("productId").value;
 
   // Ensure that the image link is in preview format
-  if (imageLink.includes('/view?usp=drive_link')) {
-    const fileId = imageLink.split('/')[5];
+  const driveUrlRegex = /https:\/\/drive\.google\.com\/file\/d\/([^\/]+)\/view/;
+  const match = imageLink.match(driveUrlRegex);
+
+  if (match) {
+    const fileId = match[1]; // Extract the file ID
     imageLink = `https://drive.google.com/file/d/${fileId}/preview`; // Convert to preview link
   }
 
