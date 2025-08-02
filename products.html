@@ -2,70 +2,574 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>HiAi Products</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Product Showcase | HiAi Security Cameras</title>
   <style>
-    .product-card {
-      border: 1px solid #ccc;
-      border-radius: 12px;
-      padding: 15px;
-      margin: 10px;
-      max-width: 300px;
-      text-align: center;
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    * {
+      box-sizing: border-box;
     }
-    .product-card img {
-      max-width: 100%;
-      height: 180px;
-      object-fit: cover;
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #f2f6fa;
+      color: #1c1c1c;
+      scrollbar-width: thin;
+      scrollbar-color: #004c92 #e0e6ed;
+    }
+
+    body, html {
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #e0e6ed;
       border-radius: 10px;
     }
-    .product-title {
-      font-size: 18px;
-      font-weight: bold;
-      margin: 10px 0 5px;
+
+    ::-webkit-scrollbar-thumb {
+      background: #004c92;
+      border-radius: 10px;
+      border: 2px solid #e0e6ed;
     }
-    .product-subtitle {
-      color: #666;
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #ffa726;
+    }
+
+    header {
+      background: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 60px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      flex-wrap: wrap;
+    }
+
+    header img {
+      height: 60px;
+    }
+
+    nav {
+      display: flex;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 30px;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #004c92;
+      font-weight: 600;
+      font-size: 15px;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #ffa726;
+    }
+
+    .cta-btn {
+      background: #004c92;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 600;
       font-size: 14px;
+      transition: background 0.3s;
+    }
+
+    .cta-btn:hover {
+      background: #ffa726;
+      color: #fff;
+    }
+
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 4px;
+    }
+
+    .menu-toggle div {
+      width: 25px;
+      height: 3px;
+      background-color: #004c92;
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        width: 100%;
+        justify-content: flex-end;
+      }
+
+      nav ul {
+        flex-direction: column;
+        width: 100%;
+        display: none;
+        background-color: #fff;
+        margin-top: 10px;
+        border-top: 1px solid #eee;
+        padding: 20px 0;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+        animation: slideDown 0.3s ease;
+        align-items: flex-end;
+        text-align: right;
+      }
+
+      nav ul.active {
+        display: flex;
+      }
+
+      .menu-toggle {
+        display: flex;
+      }
+
+      .cta-btn {
+        display: none;
+      }
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .banner {
+      position: relative;
+      width: 100%;
+      height: 250px;
+      background: url('https://res.cloudinary.com/dcbxuax2c/image/upload/v1752978576/security-camera-network_343170-18104_i8bpon.jpg') center/cover no-repeat;
+      opacity: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 10px;
+      margin: 40px auto 60px;
+      max-width: 1200px;
+      transition: opacity 1.5s ease;
+    }
+
+    .banner::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+      border-radius: 10px;
+      z-index: 1;
+    }
+
+    .banner h1 {
+      color: white;
+      font-size: 48px;
+      font-weight: 700;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+      user-select: none;
+      z-index: 2;
+    }
+
+    @media (max-width: 600px) {
+      .banner {
+        height: 180px;
+        margin: 20px auto 40px;
+      }
+
+      .banner h1 {
+        font-size: 32px;
+      }
+    }
+
+    .filter-search-container {
+      max-width: 1200px;
+      margin: 40px auto 20px;
+      padding: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .filter-group,
+    .search-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .filter-group label {
+      font-weight: 600;
+      color: #004c92;
+    }
+
+    .search-group input {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #e0e6ed;
+      flex: 1;
+    }
+
+    .search-group button {
+      background: #004c92;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.3s;
+    }
+
+    .search-group button:hover {
+      background-color: #ffa726;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 40px;
+      max-width: 1300px;
+      margin: 0 auto 100px;
+      padding: 20px;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgb(13 37 63 / 0.12);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      padding: 20px 25px;
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 30px rgb(13 37 63 / 0.18);
+    }
+
+    .product-card iframe {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .product-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #0d253f;
+    }
+
+    .product-subtitle {
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #2f5061;
+    }
+
+    .actions {
+      margin-top: 20px;
+    }
+
+    .actions button {
+      padding: 10px 20px;
+      background: #004c92;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+
+    .actions button:hover {
+      background-color: #ffa726;
+    }
+
+    footer {
+      background: #004c92;
+      color: white;
+      padding: 40px 60px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    footer .info, footer .social {
+      flex: 1 1 300px;
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+      display: block;
       margin-bottom: 10px;
     }
-    .download-btn {
-      display: inline-block;
-      background-color: #007bff;
-      color: white;
-      padding: 8px 12px;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 14px;
+
+    footer a i {
+      margin-right: 8px;
     }
+
+    @media (max-width: 768px) {
+      .products-grid {
+        grid-template-columns: repeat(1, 1fr);
+      }
+    }
+
   </style>
 </head>
 <body>
 
-  <h1>Our Products</h1>
-  <div id="product-list" style="display: flex; flex-wrap: wrap;"></div>
+<header>
+  <img src="https://res.cloudinary.com/dcbxuax2c/image/upload/v1752426303/%D9%8B_unn6mp_epv4pk.png" alt="Logo">
+
+  <div class="menu-toggle" onclick="toggleMenu()">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+
+  <nav>
+    <ul id="nav-menu">
+  <li><a href="index.html">Home</a></li>
+  <li><a href="products.html">Products</a></li>
+  <li><a href="contact.html">Contact</a></li>
+  <li><a href="about.html">About</a></li>
+  <li><a href="video-gallery.html">Video gallery</a></li>
+    </ul>
+  </nav>
+
+  <a href="https://forms.gle/1pYT5ncYJcAn7agcA" class="cta-btn">Get a Quote</a>
+</header>
+
+
+<div class="banner" role="banner" aria-label="HiAi Products Banner">
+  <div style="text-align: center; color: white;">
+    <h1>HiAi Products</h1>
+    <p style="font-size: 18px; margin-top: 8px; text-shadow: 1px 1px 5px rgba(0,0,0,0.7);">
+      Advanced security solutions tailored for you
+    </p>
+  </div>
+</div>
+<div class="filter-search-container">
+  <div class="filter-group">
+    <label for="category-filter">Category:</label>
+    <select id="category-filter">
+      <option value="all">All</option>
+      <option value="recorder">Recorder</option>
+      <option value="ipc">IPC Camera</option>
+      <option value="switch">Switch</option>
+      <option value="accessory">Accessories</option>
+    </select>
+  </div>
+
+  <div class="search-group">
+    <input type="text" id="search-input" placeholder="🔍 Search products...">
+    <button id="search-button">Search</button>
+  </div>
+</div>
+  <div class="products-grid" id="product-list"></div>
+  
+
+
+</div>
+
+
+  <footer>
+  <div class="info">
+    <h3>HiAi Contact</h3>
+    <a href="tel:0798547669"><i class="fas fa-phone"></i> 0798547669</a>
+    <a href="mailto:info@hiai-ai.com"><i class="fas fa-envelope"></i> info@hiai-ai.com</a>
+    <a href="https://wa.me/message/KSOZNQSSTILKN1"><i class="fab fa-whatsapp"></i> WhatsApp Chat</a>
+  </div>
+  <div class="social">
+    <h3>Follow Us</h3>
+    <a href="https://www.facebook.com/share/19D5Ny6An8/"><i class="fab fa-facebook"></i> Facebook</a>
+  </div>
+
+  <div style="text-align:center; margin-top:40px;">
+    <p style="margin-bottom:8px; font-family: Arial, sans-serif; font-size:14px; color:#aaa;">
+      Website developed by
+    </p>
+<img
+  src="https://res.cloudinary.com/dcbxuax2c/image/upload/v1751767267/Untitled_design_46_l0l0mt.png"
+  alt="EQtech Jordan Logo"
+  width="70"
+  style="display:inline-block; 
+         box-shadow: 0 0 0px0px rgba(255, 255, 255, 0.15);"
+/>
+
+  </div>
+</footer>
+
 
   <script>
-    const container = document.getElementById("product-list");
+  document.addEventListener('DOMContentLoaded', () => {
+    const header = document.querySelector('header');
+    const banner = document.querySelector('.banner');
+    const contactSection = document.querySelector('.contact-section');
+    const openBtn = document.querySelector('.open-form-btn');
+    const modal = document.getElementById('contact-modal');
+    const closeBtn = modal.querySelector('.modal-close-btn');
 
-    fetch("https://api.sheety.co/7a96066cfa7bed25dc8b7979487254db/products/sheet1")
-      .then(response => response.json())
-      .then(data => {
-        const products = data.sheet1;
-        products.forEach(product => {
-          container.innerHTML += `
-            <div class="product-card">
-              <img src="${product.image}" alt="${product.name}" />
-              <div class="product-title">${product.name}</div>
-              <div class="product-subtitle">${product.description}</div>
-              <a href="${product.pdf}" download="${product.name}.pdf" class="download-btn">📄 Download PDF</a>
+    // تأثير الهيدر عند التمرير
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 10) {
+        header.style.boxShadow = '0 10px 30px rgba(0, 76, 146, 0.3)';
+        header.style.transform = 'translateY(-4px)';
+      } else {
+        header.style.boxShadow = '0 2px 12px rgba(0, 0, 0, 0.08)';
+        header.style.transform = 'translateY(0)';
+      }
+    });
+
+    // تأثير فيد إن للبانر بعد تحميل الصفحة
+    setTimeout(() => {
+      banner.classList.add('visible');
+    }, 200);
+
+    // تأثير ظهور قسم الاتصال عند التمرير
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          contactSection.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    observer.observe(contactSection);
+
+    // فتح المودال
+    openBtn.addEventListener('click', () => {
+      modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
+      openBtn.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden'; // منع التمرير بالخلف
+    });
+
+    // إغلاق المودال بالزر
+    closeBtn.addEventListener('click', () => {
+      modal.classList.remove('active');
+      modal.setAttribute('aria-hidden', 'true');
+      openBtn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = ''; // إعادة التمرير
+    });
+
+    // إغلاق المودال بالنقر على الخلفية
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeBtn.click();
+      }
+    });
+
+    // إغلاق المودال بزر Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === "Escape" && modal.classList.contains('active')) {
+        closeBtn.click();
+      }
+    });
+  });
+  function toggleMenu() {
+    document.getElementById('nav-menu').classList.toggle('active');
+  }
+  document.querySelectorAll('.product-card img').forEach(img => {
+    img.addEventListener('click', () => {
+      img.classList.toggle('zoomed');
+    });
+  });
+    const productList = document.getElementById("product-list");
+    const categoryFilter = document.getElementById("category-filter");
+    const searchInput = document.getElementById("search-input");
+    const searchButton = document.getElementById("search-button");
+
+    async function loadProducts(category = "all", search = "") {
+      try {
+        const response = await fetch("https://api.sheety.co/7a96066cfa7bed25dc8b7979487254db/products/products");
+        const data = await response.json();
+        const products = data.products || [];
+
+        const filteredProducts = products.filter(product => {
+          const matchesCategory = category === "all" || product.category === category;
+          const matchesSearch = product.name.toLowerCase().includes(search.toLowerCase()) || product.description.toLowerCase().includes(search.toLowerCase());
+          return matchesCategory && matchesSearch;
+        });
+
+        productList.innerHTML = "";
+
+        filteredProducts.forEach(product => {
+          const productCard = document.createElement("div");
+          productCard.classList.add("product-card");
+          productCard.innerHTML = `
+            <iframe src="${product.image}" width="640" height="480" allow="autoplay"></iframe>
+            <div class="product-title">${product.name}</div>
+            <div class="product-subtitle">${product.description}</div>
+            <div class="actions">
+              <button onclick="viewPDF('${product.pdf}')">View PDF</button>
             </div>
           `;
+          productList.appendChild(productCard);
         });
-      })
-      .catch(error => {
-        console.error("Error:", error);
-        container.innerHTML = "<p style='color:red;'>❌ Failed to load products. Please try again later.</p>";
-      });
+      } catch (error) {
+        console.error("Error loading products:", error);
+        alert("❌ There was an error loading the products.");
+      }
+    }
+
+    searchButton.addEventListener("click", function() {
+      const category = categoryFilter.value;
+      const search = searchInput.value;
+      loadProducts(category, search);
+    });
+
+    categoryFilter.addEventListener("change", function() {
+      const category = categoryFilter.value;
+      const search = searchInput.value;
+      loadProducts(category, search);
+    });
+
+    function viewPDF(pdfLink) {
+      if (pdfLink && pdfLink.startsWith("http")) {
+        window.open(pdfLink, '_blank');
+      } else {
+        alert("❌ Invalid PDF link.");
+      }
+    }
+
+    loadProducts();
   </script>
 
 </body>
