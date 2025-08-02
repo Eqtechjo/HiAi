@@ -2,79 +2,335 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>HiAi Admin Panel - Add Product</title>
+  <title>HiAi Admin Panel - Add/Edit Product</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 30px;
+      background-color: #f4f8fc;
+      color: #333;
+      direction: ltr;
+    }
+
+    h1 {
+      color: #0056b3;
+      margin-bottom: 20px;
+      font-size: 28px;
+      text-align: left;
+    }
+
+    form {
+      background: #ffffff;
       padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 86, 179, 0.1);
+      margin-bottom: 40px;
+      max-width: 550px;
+      border-left: 5px solid #007bff;
+      direction: ltr;
     }
-    input, textarea, button {
+
+    label {
+      font-weight: 600;
+      margin-top: 12px;
       display: block;
-      margin-bottom: 15px;
+      color: #003366;
+      text-align: left;
+    }
+
+    input, textarea {
       width: 100%;
-      max-width: 400px;
-      padding: 10px;
+      margin-bottom: 16px;
+      padding: 10px 12px;
+      border: 1px solid #cfd8e3;
+      border-radius: 6px;
+      font-size: 15px;
+      text-align: left;
     }
-    .success {
-      color: green;
+
+    button {
+      padding: 10px 18px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      border-radius: 6px;
+      font-size: 16px;
+      margin-right: 10px;
+      text-align: left;
     }
-    .error {
-      color: red;
+
+    button#cancelEdit {
+      background: #6c757d;
+    }
+
+    .products-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      direction: ltr;
+    }
+
+    .product-card {
+      background: #ffffff;
+      padding: 15px;
+      border-radius: 10px;
+      width: 270px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      direction: ltr;
+    }
+
+    .product-card img {
+      width: 100%;
+      max-height: 160px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+
+    .product-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #004085;
+      text-align: left;
+    }
+
+    .product-subtitle {
+      font-size: 14px;
+      color: #555;
+      text-align: left;
+    }
+
+    .actions {
+      margin-top: 12px;
+      text-align: right;
+    }
+
+    .actions button {
+      background: #dc3545;
+      padding: 6px 14px;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .actions .edit-btn {
+      background: #28a745;
+    }
+
+    #loading-message {
+      color: #ff6600;
+      font-weight: bold;
+      margin-bottom: 10px;
+      display: none;
+    }
+
+    @keyframes spinner {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    #loading-message::before {
+      content: "⏳";
+      margin-right: 10px;
+      animation: spinner 1s linear infinite;
+    }
+
+    .image-preview {
+      width: 100%;
+      height: 200px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .product-card iframe {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
     }
   </style>
 </head>
 <body>
 
-  <h1>Add Product</h1>
+  <h1>🛠️ HiAi Admin - Add/Edit Product</h1>
+  <div id="loading-message">⏳ Processing files, please wait...</div>
 
-  <input type="text" id="name" placeholder="Product Name" required />
-  <textarea id="description" placeholder="Product Description" required></textarea>
-  
-  <label>Select Image:</label>
-  <input type="file" id="image" accept="image/*" required />
+  <form id="product-form">
+    <input type="hidden" id="productId">
+    
+    <label for="imageLink">Image Link</label>
+    <input type="url" id="imageLink" placeholder="https://drive.google.com/..." required>
+    
+    <iframe id="imagePreview" class="image-preview"></iframe>
+    
+    <label for="name">Product Name</label>
+    <input type="text" id="name" required>
 
-  <label>Select PDF:</label>
-  <input type="file" id="pdf" accept="application/pdf" required />
+    <label for="description">Product Description</label>
+    <textarea id="description" required></textarea>
 
-<button id="submitBtn">Submit</button>
+    <label for="pdfLink">PDF Link</label>
+    <input type="url" id="pdfLink" placeholder="https://drive.google.com/..." required>
 
-  <p id="message"></p>
+    <button type="submit">Save Product</button>
+    <button type="button" id="cancelEdit" style="display:none;">Cancel Edit</button>
+  </form>
 
-  <script>
-async function addProduct(name, description, imageData, pdfData) {
-  const url = "https://api.sheety.co/7a96066cfa7bed25dc8b7979487254db/products/sheet1";
+  <h2>🗂️ Product List</h2>
+  <div class="products-list" id="products-list"></div>
 
-  const payload = {
-    sheet1: { name, description, image: imageData, pdf: pdfData }
+<script>
+const form = document.getElementById("product-form");
+const loadingMessage = document.getElementById("loading-message");
+const productList = document.getElementById("products-list");
+const cancelEditButton = document.getElementById("cancelEdit");
+const imageLinkField = document.getElementById("imageLink");
+const imagePreview = document.getElementById("imagePreview");
+
+// Handle form submit
+form.addEventListener("submit", async function(e) {
+  e.preventDefault();
+  loadingMessage.style.display = "block";
+
+  const name = document.getElementById("name").value;
+  const description = document.getElementById("description").value;
+  let imageLink = document.getElementById("imageLink").value.trim();
+  const pdfLink = document.getElementById("pdfLink").value.trim();
+  const productId = document.getElementById("productId").value;
+
+  // Ensure that the image link is in preview format
+  if (imageLink.includes('/view?usp=drive_link')) {
+    const fileId = imageLink.split('/')[5];
+    imageLink = `https://drive.google.com/file/d/${fileId}/preview`; // Convert to preview link
+  }
+
+  const data = {
+    product: {
+      name,
+      description,
+      image: imageLink,
+      pdf: pdfLink
+    }
   };
 
   try {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    if (!res.ok) {
-      const errText = await res.text();
-      throw new Error(`HTTP ${res.status} - ${errText}`);
+    let response;
+    if (productId) { // Update product
+      response = await fetch(`https://api.sheety.co/7a96066cfa7bed25dc8b7979487254db/products/products/${productId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+    } else { // Add new product
+      response = await fetch("https://api.sheety.co/7a96066cfa7bed25dc8b7979487254db/products/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
     }
 
-    const data = await res.json();
-    console.log("Product added:", data.sheet1);
-    alert("✅ Product added successfully!");
+    const result = await response.json();
+
+    if (response.ok) {
+      alert("✅ تم حفظ المنتج بنجاح!");
+      form.reset();
+      addProductToList(result.product); // Add product directly to the list
+    } else {
+      console.error(result);
+      alert("❌ حدث خطأ: " + (result.error || "لم يتم الحفظ."));
+    }
   } catch (error) {
-    console.error("Error adding product:", error);
-    alert("❌ Failed to save: " + error.message);
+    alert("❌ خطأ في الاتصال بـ Sheety.");
+    console.error(error);
+  } finally {
+    loadingMessage.style.display = "none";
+    cancelEditButton.style.display = "none";
+  }
+});
+
+// Add product directly to the list without reloading all products
+function addProductToList(product) {
+  const productCard = document.createElement("div");
+  productCard.classList.add("product-card");
+  productCard.innerHTML = `
+    <iframe src="${product.image}" width="640" height="480" allow="autoplay"></iframe>
+    <div class="product-title">${product.name}</div>
+    <div class="product-subtitle">${product.description}</div>
+    <div class="actions">
+      <button class="edit-btn" onclick="editProduct(${product.id}, '${product.name}', '${product.description}', '${product.image}', '${product.pdf}')">Edit</button>
+      <button onclick="deleteProduct(${product.id})">Delete</button>
+      <button onclick="viewPDF('${product.pdf}')">View PDF</button>
+    </div>
+  `;
+  productList.appendChild(productCard);
+}
+
+// Load all products
+async function loadProducts() {
+  try {
+    const response = await fetch("https://api.sheety.co/7a96066cfa7bed25dc8b7979487254db/products/products");
+    const data = await response.json();
+    const products = data.products || [];
+
+    productList.innerHTML = "";  // Clear existing list
+
+    // Add products directly to the list
+    products.forEach(product => addProductToList(product));
+  } catch (error) {
+    console.error("Error loading products:", error);
+    alert("❌ حدث خطأ أثناء تحميل المنتجات.");
   }
 }
-document.getElementById('submitBtn').addEventListener('click', submitProduct);
 
-async function submitProduct() {
-  // كود الدالة
+// Edit product
+function editProduct(id, name, description, image, pdf) {
+  document.getElementById("name").value = name;
+  document.getElementById("description").value = description;
+  document.getElementById("imageLink").value = image;
+  document.getElementById("pdfLink").value = pdf;
+  document.getElementById("productId").value = id;
+
+  // Extract ID from Google Drive link
+  const fileId = image.split('/')[5]; 
+  const previewLink = `https://drive.google.com/file/d/${fileId}/preview`; 
+
+  // Set the image preview in iframe
+  imagePreview.src = previewLink;
+  imagePreview.style.display = "block"; 
+
+  cancelEditButton.style.display = "inline"; 
 }
 
-  </script>
+// Delete product
+async function deleteProduct(id) {
+  try {
+    const response = await fetch(`https://api.sheety.co/7a96066cfa7bed25dc8b7979487254db/products/products/${id}`, {
+      method: "DELETE"
+    });
 
+    if (response.ok) {
+      alert("✅ تم حذف المنتج بنجاح!");
+      loadProducts(); // Reload products list after deletion
+    } else {
+      alert("❌ حدث خطأ أثناء حذف المنتج.");
+    }
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    alert("❌ حدث خطأ أثناء حذف المنتج.");
+  }
+}
+
+// View PDF
+function viewPDF(pdfLink) {
+  window.open(pdfLink, "_blank");
+}
+
+// Initialize page
+loadProducts();
+</script>
 </body>
 </html>
