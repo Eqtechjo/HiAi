@@ -509,7 +509,7 @@ body {
     <button id="search-button">Search</button>
   </div>
 </div>
-<div class="products-grid">
+  <div class="products-grid" id="product-list"></div>
   
 
 
@@ -816,76 +816,33 @@ document.addEventListener("DOMContentLoaded", () => {
   More icons created by Anggara - Flaticon
 </a>
 
-<script>
-  const icon = document.querySelector('.apps-float-icon');
-  const notification = document.getElementById('apps-notification');
-  const downloadBox = document.getElementById('apps-download-box');
+  </style>
+</head>
+<body>
+  <h1>📦 Available Products</h1>
+  <div class="products-grid" id="product-list"></div>
 
-  let open = false;
+  <script>
+    const container = document.getElementById("product-list");
 
-  function toggleAppsBox() {
-    open = !open;
+    fetch("https://api.sheety.co/7a96066cfa7bed25dc8b7979487254db/products")
+      .then(response => response.json())
+      .then(data => {
+        const products = data.products;
+        products.forEach(product => {
+          container.innerHTML += `
+            <div class="product-card">
+              <img src="${product.image}" alt="${product.name}">
+              <div class="product-title">${product.name}</div>
+              <div class="product-subtitle">${product.description}</div>
+              <a href="${product.pdf}" download class="download-btn">📄 Download PDF</a>
+            </div>
+          `;
+        });
+      })
+      .catch(error => {
+        container.innerHTML = "<p style='color:red;'>Failed to load products.</p>";
+        console.error(error);
+      });
+  </script>
 
-    if (open) {
-      notification.classList.add('visible');
-      downloadBox.classList.add('visible');
-      downloadBox.setAttribute('aria-hidden', 'false');
-    } else {
-      notification.classList.remove('visible');
-      downloadBox.classList.remove('visible');
-      downloadBox.setAttribute('aria-hidden', 'true');
-    }
-  }
-
-  icon.addEventListener('click', toggleAppsBox);
-
-  // دعم لوحة المفاتيح
-  icon.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      toggleAppsBox();
-    }
-  });
-
-  // إظهار رسالة التنبيه تلقائياً عند تحميل الصفحة 3 ثواني ثم تختفي
-  window.addEventListener('load', () => {
-    notification.classList.add('visible');
-    setTimeout(() => {
-      notification.classList.remove('visible');
-    }, 7000);
-  });
-  document.addEventListener('DOMContentLoaded', () => {
-  const banner = document.querySelector('.banner');
-  if (banner) {
-    setTimeout(() => {
-      banner.classList.add('visible');
-    }, 200);
-  }
-});
- const container = document.querySelector(".products-grid");
-
-// استدعاء المنتجات من Sheety API
-fetch("https://api.sheety.co/7a96066cfa7bed25dc8b7979487254db/products/sheet1") // ← غيّر الرابط حسب مشروعك
-  .then(response => response.json())
-  .then(data => {
-const products = data.sheet1;
-    products.forEach(product => {
-      container.innerHTML += `
-        <section class="product-card">
-          <img src="${product.image}" alt="${product.name}">
-          <div class="product-content">
-            <h2 class="product-title">${product.name}</h2>
-            <div class="product-subtitle">${product.description}</div>
-            <a href="${product.pdf}" download="${product.name}.pdf" class="download-btn">Download Details</a>
-          </div>
-        </section>
-      `;
-    });
-  })
-  .catch(error => {
-    console.error("Error loading products:", error);
-    container.innerHTML = "<p style='color:red;'>Failed to load products. Please try again later.</p>";
-  });
-
-</script>
-</html>
