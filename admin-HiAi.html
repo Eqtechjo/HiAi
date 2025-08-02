@@ -36,7 +36,7 @@
   <label>Select PDF:</label>
   <input type="file" id="pdf" accept="application/pdf" required />
 
-  <button onclick="submitProduct()">Submit</button>
+<button id="submitBtn">Submit</button>
 
   <p id="message"></p>
 
@@ -67,6 +67,11 @@ async function addProduct(name, description, imageData, pdfData) {
     console.error("Error adding product:", error);
     alert("❌ Failed to save: " + error.message);
   }
+}
+document.getElementById('submitBtn').addEventListener('click', submitProduct);
+
+async function submitProduct() {
+  // كود الدالة
 }
 
   </script>
