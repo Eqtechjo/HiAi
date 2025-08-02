@@ -825,7 +825,7 @@ document.addEventListener("DOMContentLoaded", () => {
   <script>
     const container = document.getElementById("product-list");
 
-    fetch("https://api.sheety.co/7a96066cfa7bed25dc8b7979487254db/products")
+    fetch("https://api.sheety.co/7a96066cfa7bed25dc8b7979487254db/products/sheet1")
       .then(response => response.json())
       .then(data => {
         const products = data.products;
@@ -845,4 +845,5 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error(error);
       });
   </script>
+
 
