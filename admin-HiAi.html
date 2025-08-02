@@ -200,14 +200,15 @@
       const imageData = await readFileAsDataURL(imageFile);
       const pdfData = await readFileAsDataURL(pdfFile);
 
-      const payload = {
-        products: {
-          name,
-          description,
-          image: imageData,
-          pdf: pdfData
-        }
-      };
+const payload = {
+  sheet1: {
+    name,
+    description,
+    image: imageData,
+    pdf: pdfData
+  }
+};
+
 
       try {
         if (editId) {
