@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Products | HiAi Security Cameras</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        background: #f2f6fa;
+        color: #1c1c1c;
+        scrollbar-width: thin;
+        scrollbar-color: #004c92 #e0e6ed;
+      }
+
+      body,
+      html {
+        overflow-x: hidden;
+      }
+
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #e0e6ed;
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #004c92;
+        border-radius: 10px;
+        border: 2px solid #e0e6ed;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #ffa726;
+      }
+
+      header {
+        background: #ffffff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 60px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        flex-wrap: wrap;
+      }
+
+      header img {
+        height: 60px;
+      }
+      nav {
+        display: flex;
+      }
+
+      nav ul {
+        list-style: none;
+        display: flex;
+        gap: 30px;
+        margin: 0;
+        padding: 0;
+      }
+
+      nav a {
+        text-decoration: none;
+        color: #004c92;
+        font-weight: 600;
+        font-size: 15px;
+        transition: color 0.3s;
+      }
+
+      nav a:hover {
+        color: #ffa726;
+      }
+
+      .cta-btn {
+        background: #004c92;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        transition: background 0.3s;
+      }
+
+      .cta-btn:hover {
+        background: #ffa726;
+        color: #fff;
+      }
+
+      .menu-toggle {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+        gap: 4px;
+      }
+
+      .menu-toggle div {
+        width: 25px;
+        height: 3px;
+        background-color: #004c92;
+        border-radius: 2px;
+        transition: 0.3s;
+      }
+
+      @media (max-width: 768px) {
+        nav {
+          width: 100%;
+          justify-content: flex-end;
+        }
+        nav ul {
+          flex-direction: column;
+          width: 100%;
+          display: none;
+          background-color: #fff;
+          margin-top: 10px;
+          border-top: 1px solid #eee;
+          padding: 20px 0;
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+          align-items: flex-end;
+          text-align: right;
+        }
+        nav ul.active {
+          display: flex;
+        }
+        .menu-toggle {
+          display: flex;
+        }
+        .cta-btn {
+          display: none;
+        }
+      }
+
+      .banner {
+        position: relative;
+        width: 100%;
+        height: 250px;
+        background: url("https://res.cloudinary.com/dcbxuax2c/image/upload/v1752978576/security-camera-network_343170-18104_i8bpon.jpg")
+          center/cover no-repeat;
+        opacity: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: opacity 1.2s ease;
+        border-radius: 10px;
+        margin: 40px auto 40px;
+        max-width: 1200px;
+      }
+
+      .banner::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.32);
+        border-radius: 10px;
+        z-index: 1;
+      }
+
+      .banner > * {
+        position: relative;
+        z-index: 2;
+      }
+      .banner.visible {
+        opacity: 1;
+      }
+
+      .banner h1 {
+        color: white;
+        font-size: 48px;
+        font-weight: 700;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+        margin: 0;
+      }
+
+      .banner p {
+        margin-top: 8px;
+        color: white;
+        font-size: 18px;
+        text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
+      }
+
+      @media (max-width: 600px) {
+        .banner {
+          height: 180px;
+          margin: 20px auto 30px;
+        }
+        .banner h1 {
+          font-size: 32px;
+        }
+        .banner p {
+          font-size: 14px;
+        }
+      }
+
+      .filter-search-container {
+        max-width: 1200px;
+        margin: 0 auto 20px;
+        padding: 20px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .filter-group,
+      .search-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+        min-width: 250px;
+      }
+
+      .filter-group label {
+        font-weight: 600;
+        color: #004c92;
+      }
+
+      .filter-group select,
+      .search-group input {
+        width: 100%;
+        padding: 12px 16px;
+        font-size: 15px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        outline: none;
+        transition: border-color 0.3s ease;
+      }
+
+      .search-group button {
+        padding: 12px 20px;
+        background-color: #004c92;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .search-group button:hover {
+        background-color: #00386d;
+      }
+      .filter-group select:focus,
+      .search-group input:focus {
+        border-color: #004c92;
+        box-shadow: 0 0 6px rgba(0, 76, 146, 0.2);
+      }
+
+      .products-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 34px;
+        max-width: 1300px;
+        margin: 0 auto 100px;
+        padding: 20px;
+        min-height: 180px;
+      }
+
+      .product-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgb(13 37 63 / 0.12);
+        display: flex;
+        flex-direction: column;
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+        padding: 20px 25px;
+        overflow: hidden;
+      }
+
+      .product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 30px rgb(13 37 63 / 0.18);
+      }
+
+      .product-card img {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        transition: transform 0.3s ease;
+        cursor: zoom-in;
+      }
+
+      .product-card img.zoomed {
+        transform: scale(1.4);
+      }
+      .product-content {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .product-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: #0d253f;
+      }
+
+      .features-list {
+        list-style-type: disc;
+        padding-left: 20px;
+        margin: 0 0 25px;
+        color: #444;
+      }
+
+      .features-list li {
+        margin-bottom: 8px;
+        line-height: 1.6;
+      }
+
+      .download-btn {
+        align-self: flex-start;
+        padding: 12px 28px;
+        background: #0d253f;
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+      }
+
+      .download-btn:hover {
+        background-color: #144d73;
+      }
+
+      .status-box {
+        max-width: 1300px;
+        margin: 10px auto 0;
+        padding: 0 20px;
+        color: #00386d;
+        font-weight: 600;
+      }
+
+      .empty-state {
+        grid-column: 1 / -1;
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 8px 16px rgb(13 37 63 / 0.08);
+        text-align: center;
+        color: #345;
+      }
+
+      footer {
+        background: #004c92;
+        color: white;
+        padding: 40px 60px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+
+      footer .info,
+      footer .social {
+        flex: 1 1 300px;
+      }
+
+      footer a {
+        color: white;
+        text-decoration: none;
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      @media (max-width: 1000px) {
+        .products-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 700px) {
+        .products-grid {
+          grid-template-columns: 1fr;
+        }
+        .filter-search-container {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .filter-group,
+        .search-group {
+          width: 100%;
+        }
+        footer {
+          padding: 30px 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img
+        src="https://res.cloudinary.com/dcbxuax2c/image/upload/v1752426303/%D9%8B_unn6mp_epv4pk.png"
+        alt="Logo"
+      />
+
+      <div class="menu-toggle" onclick="toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+
+      <nav>
+        <ul id="nav-menu">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="products.html">Products</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="video-gallery.html">Video gallery</a></li>
+        </ul>
+      </nav>
+
+      <a href="https://forms.gle/1pYT5ncYJcAn7agcA" class="cta-btn"
+        >Get a Quote</a
+      >
+    </header>
+
+    <div class="banner" role="banner" aria-label="HiAi Products Banner">
+      <div style="text-align: center; color: white">
+        <h1>HiAi Products</h1>
+        <p>Advanced security solutions tailored for you</p>
+      </div>
+    </div>
+
+    <div class="filter-search-container">
+      <div class="filter-group">
+        <label for="category-filter">Category:</label>
+        <select id="category-filter">
+          <option value="all">All</option>
+          <option value="recorder">Recorder</option>
+          <option value="ipc">IPC Camera</option>
+          <option value="switch">Switch</option>
+          <option value="accessory">Accessories</option>
+        </select>
+      </div>
+
+      <div class="search-group">
+        <input type="text" id="search-input" placeholder="Search products..." />
+        <button id="search-button" type="button">Search</button>
+      </div>
+    </div>
+
+    <div class="status-box" id="status-box">Loading products...</div>
+    <div class="products-grid" id="products-grid"></div>
+
+    <footer>
+      <div class="info">
+        <h3>HiAi Contact</h3>
+        <a href="tel:0798547669">0798547669</a>
+        <a href="mailto:info@hiai-ai.com">info@hiai-ai.com</a>
+        <a href="https://wa.me/message/KSOZNQSSTILKN1">WhatsApp Chat</a>
+      </div>
+      <div class="social">
+        <h3>Follow Us</h3>
+        <a href="https://www.facebook.com/share/19D5Ny6An8/">Facebook</a>
+      </div>
+
+      <div style="text-align: center; margin-top: 40px">
+        <p
+          style="
+            margin-bottom: 8px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            color: #aaa;
+          "
+        >
+          Website developed by
+        </p>
+        <img
+          src="https://res.cloudinary.com/dcbxuax2c/image/upload/v1751767267/Untitled_design_46_l0l0mt.png"
+          alt="EQtech Jordan Logo"
+          width="70"
+          style="display: inline-block"
+        />
+      </div>
+    </footer>
+
+    <script type="module">
+      import {
+        getMergedProducts,
+        isFirebaseConfigured,
+      } from "./firebase-config.js";
+
+      const productsGrid = document.getElementById("products-grid");
+      const statusBox = document.getElementById("status-box");
+      const categoryFilter = document.getElementById("category-filter");
+      const searchInput = document.getElementById("search-input");
+      const searchButton = document.getElementById("search-button");
+
+      let allProducts = [];
+
+      function toggleMenu() {
+        document.getElementById("nav-menu").classList.toggle("active");
+      }
+      window.toggleMenu = toggleMenu;
+
+      function normalizeList(description) {
+        if (Array.isArray(description)) return description;
+        if (typeof description !== "string") return [];
+
+        return description
+          .split("\n")
+          .map((item) => item.replace(/^[-*\u2022]\s*/, "").trim())
+          .filter(Boolean);
+      }
+
+      function autoCategory(name, category) {
+        if (category) return String(category).toLowerCase();
+
+        const lower = String(name || "").toLowerCase();
+        if (lower.includes("nvr")) return "recorder";
+        if (lower.includes("switch")) return "switch";
+        if (lower.includes("camera") || lower.includes("mp")) return "ipc";
+        if (lower.includes("accessory") || lower.includes("accessories"))
+          return "accessory";
+        return "other";
+      }
+
+      function cardTemplate(product) {
+        const points = normalizeList(product.description);
+        const listItems = points.map((point) => `<li>${point}</li>`).join("");
+
+        return `
+      <section class="product-card" data-category="${autoCategory(product.title, product.category)}">
+        <img src="${product.image}" alt="${product.title}" loading="lazy" />
+        <div class="product-content">
+          <h2 class="product-title">${product.title}</h2>
+          <ul class="features-list">${listItems}</ul>
+          <a href="${product.detailsUrl}" target="_blank" rel="noopener" class="download-btn">Download Details</a>
+        </div>
+      </section>
+    `;
+      }
+
+      function bindImageZoom() {
+        productsGrid.querySelectorAll(".product-card img").forEach((img) => {
+          img.addEventListener("click", () => {
+            img.classList.toggle("zoomed");
+          });
+        });
+      }
+
+      function renderProducts(products) {
+        productsGrid.innerHTML = "";
+
+        if (!products.length) {
+          productsGrid.innerHTML =
+            '<div class="empty-state">No products available.</div>';
+          return;
+        }
+
+        productsGrid.innerHTML = products.map(cardTemplate).join("");
+        bindImageZoom();
+      }
+
+      function applyFilter() {
+        const selectedCategory = categoryFilter.value;
+        const searchText = searchInput.value.trim().toLowerCase();
+
+        const filtered = allProducts.filter((product) => {
+          const category = autoCategory(product.title, product.category);
+          const haystack = [
+            product.title,
+            ...(Array.isArray(product.description)
+              ? product.description
+              : normalizeList(product.description)),
+          ]
+            .join(" ")
+            .toLowerCase();
+
+          const matchesCategory =
+            selectedCategory === "all" || category === selectedCategory;
+          const matchesSearch = haystack.includes(searchText);
+          return matchesCategory && matchesSearch;
+        });
+
+        renderProducts(filtered);
+        statusBox.textContent = `${filtered.length} product(s) shown`;
+      }
+
+      async function loadProducts() {
+        try {
+          allProducts = await getMergedProducts();
+          injectDynamicCategories(allProducts);
+          renderProducts(allProducts);
+
+          if (isFirebaseConfigured()) {
+            statusBox.textContent = `${allProducts.length} product(s) loaded`;
+          } else {
+            statusBox.textContent = `${allProducts.length} product(s) loaded (legacy only)`;
+          }
+        } catch (error) {
+          console.error("Failed to load products:", error);
+          statusBox.textContent = "Failed to load products.";
+          productsGrid.innerHTML =
+            '<div class="empty-state">Something went wrong while loading products.</div>';
+        }
+      }
+
+      searchButton.addEventListener("click", applyFilter);
+
+      function injectDynamicCategories(products) {
+        const known = new Set([
+          "all",
+          "recorder",
+          "ipc",
+          "switch",
+          "accessory",
+        ]);
+        const extras = new Set();
+        products.forEach((p) => {
+          const cat = autoCategory(p.title, p.category);
+          if (cat && !known.has(cat)) extras.add(cat);
+        });
+        categoryFilter
+          .querySelectorAll("[data-dynamic]")
+          .forEach((o) => o.remove());
+        extras.forEach((cat) => {
+          const opt = document.createElement("option");
+          opt.value = cat;
+          opt.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+          opt.dataset.dynamic = "1";
+          categoryFilter.appendChild(opt);
+        });
+      }
+
+      categoryFilter.addEventListener("change", applyFilter);
+      searchInput.addEventListener("input", applyFilter);
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const banner = document.querySelector(".banner");
+        setTimeout(() => banner.classList.add("visible"), 200);
+        loadProducts();
+      });
+    </script>
+  </body>
+</html>
