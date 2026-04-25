@@ -25,6 +25,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const productsCollection = collection(db, "products");
+const videosCollection = collection(db, "videos");
 
 export const LEGACY_PRODUCTS = [
   {
@@ -314,5 +315,54 @@ export async function updateProductById(id, product) {
 
 export async function deleteProductById(id) {
   const target = doc(db, "products", id);
+  return deleteDoc(target);
+}
+
+/* ─── VIDEOS CRUD ─── */
+export async function getVideos() {
+  try {
+    const q = query(videosCollection, orderBy("createdAt", "desc"));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((item) => ({
+      id: item.id,
+      ...item.data(),
+    }));
+  } catch (err) {
+    if (err?.code === "failed-precondition" || err?.code === "unimplemented") {
+      console.warn("Firestore index missing, loading videos without ordering.");
+      const snapshot = await getDocs(videosCollection);
+      return snapshot.docs.map((item) => ({
+        id: item.id,
+        ...item.data(),
+      }));
+    }
+    throw err;
+  }
+}
+
+export async function createVideo(video) {
+  return addDoc(videosCollection, {
+    title: String(video.title || "").trim(),
+    thumbnailUrl: String(video.thumbnailUrl || "").trim(),
+    videoUrl: String(video.videoUrl || "").trim(),
+    description: String(video.description || "").trim(),
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
+}
+
+export async function updateVideoById(id, video) {
+  const target = doc(db, "videos", id);
+  return updateDoc(target, {
+    title: String(video.title || "").trim(),
+    thumbnailUrl: String(video.thumbnailUrl || "").trim(),
+    videoUrl: String(video.videoUrl || "").trim(),
+    description: String(video.description || "").trim(),
+    updatedAt: serverTimestamp(),
+  });
+}
+
+export async function deleteVideoById(id) {
+  const target = doc(db, "videos", id);
   return deleteDoc(target);
 }
