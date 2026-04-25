@@ -43,6 +43,141 @@
         min-height: 100vh;
       }
 
+      /* ── SIDEBAR ── */
+      .admin-sidebar {
+        position: fixed;
+        left: 0;
+        top: 60px;
+        width: 220px;
+        height: calc(100vh - 60px);
+        background: var(--brand-dk);
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+        padding: 20px 0;
+        z-index: 99;
+        overflow-y: auto;
+        overflow-x: hidden;
+        transition: width 0.25s ease;
+      }
+
+      .admin-sidebar.collapsed {
+        width: 54px;
+      }
+
+      .admin-sidebar a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: rgba(255, 255, 255, 0.75);
+        text-decoration: none;
+        padding: 12px 18px;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+      .admin-sidebar a:hover {
+        color: var(--accent);
+        background: rgba(255, 167, 38, 0.1);
+      }
+
+      .admin-sidebar a.active {
+        color: var(--accent);
+        background: rgba(255, 167, 38, 0.15);
+        border-left: 3px solid var(--accent);
+        padding-left: 15px;
+      }
+
+      .admin-sidebar a i {
+        width: 18px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+
+      .admin-sidebar a .nav-label {
+        transition: opacity 0.2s ease;
+      }
+
+      .admin-sidebar.collapsed a .nav-label {
+        opacity: 0;
+        width: 0;
+        overflow: hidden;
+      }
+
+      /* Toggle button inside sidebar */
+      .sidebar-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 8px 14px;
+        margin-bottom: 8px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .sidebar-toggle button {
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: rgba(255, 255, 255, 0.75);
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+      }
+
+      .sidebar-toggle button:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      /* ── ADJUST TOPBAR FOR SIDEBAR ── */
+      .topbar {
+        margin-left: 0;
+      }
+
+      /* ── PAGE BODY LAYOUT ── */
+      .page-body {
+        display: flex;
+        min-height: calc(100vh - 60px);
+        transition: padding-left 0.25s ease;
+        padding-left: 220px;
+      }
+
+      .page-body.sidebar-collapsed {
+        padding-left: 54px;
+      }
+
+      /* ── ADJUST WORKSPACE FOR SIDEBAR ── */
+      .workspace {
+        flex: 1;
+        min-width: 0;
+        display: grid;
+        grid-template-columns: 390px 1fr;
+        gap: 20px;
+        max-width: 1380px;
+        margin: 24px auto;
+        padding: 0 20px 40px;
+        align-items: start;
+      }
+
+      @media (max-width: 768px) {
+        .admin-sidebar {
+          width: 54px;
+        }
+        .admin-sidebar a .nav-label {
+          opacity: 0;
+          width: 0;
+          overflow: hidden;
+        }
+        .page-body {
+          padding-left: 54px;
+        }
+      }
+
       /* ── TOP BAR ── */
       .topbar {
         background: var(--brand-dk);
@@ -583,409 +718,471 @@
       <a href="products.html">View Products Page ↗</a>
     </header>
 
-    <main class="workspace">
-      <!-- ── LEFT: FORM ── -->
-      <aside class="panel" id="form-panel">
-        <div class="edit-banner" id="edit-banner">
-          <span class="edit-banner-icon"
-            ><i class="fa-solid fa-pen-to-square"></i
-          ></span>
-          <span>Editing:</span>
-          <span class="edit-banner-name" id="edit-banner-name"></span>
-        </div>
+    <!-- SIDEBAR NAVIGATION -->
+    <nav class="admin-sidebar" id="admin-sidebar">
+      <div class="sidebar-toggle">
+        <button id="sidebar-toggle-btn" title="Toggle sidebar">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+      <a href="admin-HiAi.html" class="active">
+        <i class="fa-solid fa-cube"></i>
+        <span class="nav-label">Products</span>
+      </a>
+      <a href="videos-admin.html">
+        <i class="fa-solid fa-film"></i>
+        <span class="nav-label">Videos</span>
+      </a>
+    </nav>
 
-        <div class="panel-header">
-          <span><i class="fa-solid fa-box-archive"></i></span>
-          <h2 id="form-heading">Add New Product</h2>
-        </div>
-
-        <form class="panel-body" id="product-form" novalidate>
-          <input type="hidden" id="product-id" />
-
-          <!-- Title -->
-          <div class="form-field">
-            <label for="title"
-              ><span class="icon"><i class="fa-solid fa-tag fa-fw"></i></span>
-              Product Title</label
-            >
-            <input
-              id="title"
-              type="text"
-              placeholder="e.g. SE-FAM 5T15-8MP A+"
-              required
-            />
+    <div class="page-body" id="page-body">
+      <main class="workspace">
+        <!-- ── LEFT: FORM ── -->
+        <aside class="panel" id="form-panel">
+          <div class="edit-banner" id="edit-banner">
+            <span class="edit-banner-icon"
+              ><i class="fa-solid fa-pen-to-square"></i
+            ></span>
+            <span>Editing:</span>
+            <span class="edit-banner-name" id="edit-banner-name"></span>
           </div>
 
-          <!-- Category -->
-          <div class="form-field">
-            <label for="category"
-              ><span class="icon"
-                ><i class="fa-solid fa-layer-group fa-fw"></i
-              ></span>
-              Category</label
-            >
-            <div class="cat-row">
-              <select id="category">
-                <option value="ipc">IPC Camera</option>
-                <option value="recorder">Recorder</option>
-                <option value="switch">Switch</option>
-                <option value="accessory">Accessories</option>
-                <option value="other">Other (custom)…</option>
-              </select>
-              <div id="custom-category-wrap">
-                <input
-                  id="custom-category"
-                  type="text"
-                  placeholder="Type category name"
-                />
+          <div class="panel-header">
+            <span><i class="fa-solid fa-box-archive"></i></span>
+            <h2 id="form-heading">Add New Product</h2>
+          </div>
+
+          <form class="panel-body" id="product-form" novalidate>
+            <input type="hidden" id="product-id" />
+
+            <!-- Title -->
+            <div class="form-field">
+              <label for="title"
+                ><span class="icon"><i class="fa-solid fa-tag fa-fw"></i></span>
+                Product Title</label
+              >
+              <input
+                id="title"
+                type="text"
+                placeholder="e.g. SE-FAM 5T15-8MP A+"
+                required
+              />
+            </div>
+
+            <!-- Category -->
+            <div class="form-field">
+              <label for="category"
+                ><span class="icon"
+                  ><i class="fa-solid fa-layer-group fa-fw"></i
+                ></span>
+                Category</label
+              >
+              <div class="cat-row">
+                <select id="category">
+                  <option value="ipc">IPC Camera</option>
+                  <option value="recorder">Recorder</option>
+                  <option value="switch">Switch</option>
+                  <option value="accessory">Accessories</option>
+                  <option value="other">Other (custom)…</option>
+                </select>
+                <div id="custom-category-wrap">
+                  <input
+                    id="custom-category"
+                    type="text"
+                    placeholder="Type category name"
+                  />
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- Description -->
-          <div class="form-field">
-            <label for="description"
-              ><span class="icon"
-                ><i class="fa-solid fa-list-ul fa-fw"></i
-              ></span>
-              Description Points</label
-            >
-            <textarea
-              id="description"
-              placeholder="8MP High Performance CMOS&#10;3840x2160 Resolution&#10;30fps Video&#10;…one point per line"
-              required
-            ></textarea>
-            <p class="field-hint">
-              Each line = one bullet point on the products page.
-            </p>
-          </div>
-
-          <!-- Image -->
-          <div class="form-field">
-            <label for="image-file"
-              ><span class="icon"><i class="fa-solid fa-image fa-fw"></i></span>
-              Product Image</label
-            >
-            <input id="image-file" type="file" accept="image/*" />
-            <p class="field-hint">
-              In edit mode, leave empty to keep the current image.
-            </p>
-            <div class="asset-pill" id="current-image">
-              <i class="fa-solid fa-image"></i>
-              <a id="current-image-link" href="#" target="_blank" rel="noopener"
-                >Current image</a
+            <!-- Description -->
+            <div class="form-field">
+              <label for="description"
+                ><span class="icon"
+                  ><i class="fa-solid fa-list-ul fa-fw"></i
+                ></span>
+                Description Points</label
               >
+              <textarea
+                id="description"
+                placeholder="8MP High Performance CMOS&#10;3840x2160 Resolution&#10;30fps Video&#10;…one point per line"
+                required
+              ></textarea>
+              <p class="field-hint">
+                Each line = one bullet point on the products page.
+              </p>
             </div>
-            <div class="img-preview" id="image-preview">No image selected</div>
-          </div>
 
-          <!-- Details File -->
-          <div class="form-field">
-            <label for="details-file"
-              ><span class="icon"
-                ><i class="fa-solid fa-file-lines fa-fw"></i
-              ></span>
-              Details File
-              <small style="font-weight: 400; color: var(--muted)"
-                >(PDF, DOC…)</small
-              ></label
-            >
-            <input
-              id="details-file"
-              type="file"
-              accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.txt,image/*"
-            />
-            <p class="field-hint">
-              In edit mode, leave empty to keep the current file.
-            </p>
-            <div class="asset-pill" id="current-file">
-              <i class="fa-solid fa-file-lines"></i>
-              <a id="current-file-link" href="#" target="_blank" rel="noopener"
-                >Current details file</a
+            <!-- Image -->
+            <div class="form-field">
+              <label for="image-file"
+                ><span class="icon"
+                  ><i class="fa-solid fa-image fa-fw"></i
+                ></span>
+                Product Image</label
               >
+              <input id="image-file" type="file" accept="image/*" />
+              <p class="field-hint">
+                In edit mode, leave empty to keep the current image.
+              </p>
+              <div class="asset-pill" id="current-image">
+                <i class="fa-solid fa-image"></i>
+                <a
+                  id="current-image-link"
+                  href="#"
+                  target="_blank"
+                  rel="noopener"
+                  >Current image</a
+                >
+              </div>
+              <div class="img-preview" id="image-preview">
+                No image selected
+              </div>
             </div>
+
+            <!-- Details File -->
+            <div class="form-field">
+              <label for="details-file"
+                ><span class="icon"
+                  ><i class="fa-solid fa-file-lines fa-fw"></i
+                ></span>
+                Details File
+                <small style="font-weight: 400; color: var(--muted)"
+                  >(PDF, DOC…)</small
+                ></label
+              >
+              <input
+                id="details-file"
+                type="file"
+                accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.txt,image/*"
+              />
+              <p class="field-hint">
+                In edit mode, leave empty to keep the current file.
+              </p>
+              <div class="asset-pill" id="current-file">
+                <i class="fa-solid fa-file-lines"></i>
+                <a
+                  id="current-file-link"
+                  href="#"
+                  target="_blank"
+                  rel="noopener"
+                  >Current details file</a
+                >
+              </div>
+            </div>
+
+            <!-- Status message -->
+            <div class="status-msg" id="form-msg"></div>
+
+            <!-- Actions -->
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" id="save-btn">
+                <span><i class="fa-solid fa-floppy-disk"></i></span> Save
+                Product
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                id="cancel-btn"
+                style="display: none"
+              >
+                <span><i class="fa-solid fa-xmark"></i></span> Cancel Edit
+              </button>
+            </div>
+          </form>
+
+          <p class="small-note">
+            Legacy products (static) are always visible on the products page.
+            This panel manages only Firebase products.
+          </p>
+        </aside>
+
+        <!-- ── RIGHT: LIST ── -->
+        <section class="panel" id="list-panel">
+          <div class="panel-header">
+            <span><i class="fa-solid fa-table-list"></i></span>
+            <h2>Firebase Products</h2>
+            <button class="btn btn-ghost btn-sm" id="refresh-btn" type="button">
+              <i class="fa-solid fa-rotate-right"></i> Refresh
+            </button>
           </div>
 
-          <!-- Status message -->
-          <div class="status-msg" id="form-msg"></div>
-
-          <!-- Actions -->
-          <div class="form-actions">
-            <button type="submit" class="btn btn-primary" id="save-btn">
-              <span><i class="fa-solid fa-floppy-disk"></i></span> Save Product
-            </button>
-            <button
-              type="button"
-              class="btn btn-secondary"
-              id="cancel-btn"
-              style="display: none"
-            >
-              <span><i class="fa-solid fa-xmark"></i></span> Cancel Edit
-            </button>
+          <!-- Filter toolbar -->
+          <div class="list-toolbar">
+            <input id="list-search" type="text" placeholder="Search..." />
+            <select id="list-cat-filter">
+              <option value="all">All Categories</option>
+              <option value="ipc">IPC Camera</option>
+              <option value="recorder">Recorder</option>
+              <option value="switch">Switch</option>
+              <option value="accessory">Accessories</option>
+            </select>
+            <span class="list-count" id="list-count">—</span>
           </div>
-        </form>
 
-        <p class="small-note">
-          Legacy products (static) are always visible on the products page. This
-          panel manages only Firebase products.
-        </p>
-      </aside>
+          <div class="products-grid" id="products-list">
+            <div class="empty-state">Loading products…</div>
+          </div>
+        </section>
+      </main>
 
-      <!-- ── RIGHT: LIST ── -->
-      <section class="panel" id="list-panel">
-        <div class="panel-header">
-          <span><i class="fa-solid fa-table-list"></i></span>
-          <h2>Firebase Products</h2>
-          <button class="btn btn-ghost btn-sm" id="refresh-btn" type="button">
-            <i class="fa-solid fa-rotate-right"></i> Refresh
-          </button>
-        </div>
+      <script type="module">
+        import {
+          getProducts,
+          createProduct,
+          updateProductById,
+          deleteProductById,
+          isFirebaseConfigured,
+        } from "./firebase-config.js";
+        import { uploadFileToCloudinary } from "./cloudinary-config.js";
+        import {
+          getStorage,
+          ref,
+          uploadBytesResumable,
+          getDownloadURL,
+        } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
+        import {
+          initializeApp,
+          getApps,
+        } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 
-        <!-- Filter toolbar -->
-        <div class="list-toolbar">
-          <input id="list-search" type="text" placeholder="Search..." />
-          <select id="list-cat-filter">
-            <option value="all">All Categories</option>
-            <option value="ipc">IPC Camera</option>
-            <option value="recorder">Recorder</option>
-            <option value="switch">Switch</option>
-            <option value="accessory">Accessories</option>
-          </select>
-          <span class="list-count" id="list-count">—</span>
-        </div>
+        /* ─── Firebase Storage init (reuse existing app) ─── */
+        const _fbApp = getApps()[0];
+        const storage = getStorage(_fbApp);
 
-        <div class="products-grid" id="products-list">
-          <div class="empty-state">Loading products…</div>
-        </div>
-      </section>
-    </main>
+        /* ─── DOM refs ─── */
+        const form = document.getElementById("product-form");
+        const formPanel = document.getElementById("form-panel");
+        const formMsg = document.getElementById("form-msg");
+        const formHeading = document.getElementById("form-heading");
+        const editBanner = document.getElementById("edit-banner");
+        const editBannerName = document.getElementById("edit-banner-name");
 
-    <script type="module">
-      import {
-        getProducts,
-        createProduct,
-        updateProductById,
-        deleteProductById,
-        isFirebaseConfigured,
-      } from "./firebase-config.js";
-      import {
-        uploadFileToCloudinary,
-        getCloudinaryUploadInfo,
-      } from "./cloudinary-config.js";
+        const idField = document.getElementById("product-id");
+        const titleField = document.getElementById("title");
+        const categoryField = document.getElementById("category");
+        const customCatWrap = document.getElementById("custom-category-wrap");
+        const customCatField = document.getElementById("custom-category");
+        const descriptionField = document.getElementById("description");
+        const imageField = document.getElementById("image-file");
+        const detailsField = document.getElementById("details-file");
+        const imgPreview = document.getElementById("image-preview");
+        const currentImageBox = document.getElementById("current-image");
+        const currentImageLink = document.getElementById("current-image-link");
+        const currentFileBox = document.getElementById("current-file");
+        const currentFileLink = document.getElementById("current-file-link");
 
-      /* ─── DOM refs ─── */
-      const form = document.getElementById("product-form");
-      const formPanel = document.getElementById("form-panel");
-      const formMsg = document.getElementById("form-msg");
-      const formHeading = document.getElementById("form-heading");
-      const editBanner = document.getElementById("edit-banner");
-      const editBannerName = document.getElementById("edit-banner-name");
+        const saveBtn = document.getElementById("save-btn");
+        const cancelBtn = document.getElementById("cancel-btn");
+        const refreshBtn = document.getElementById("refresh-btn");
 
-      const idField = document.getElementById("product-id");
-      const titleField = document.getElementById("title");
-      const categoryField = document.getElementById("category");
-      const customCatWrap = document.getElementById("custom-category-wrap");
-      const customCatField = document.getElementById("custom-category");
-      const descriptionField = document.getElementById("description");
-      const imageField = document.getElementById("image-file");
-      const detailsField = document.getElementById("details-file");
-      const imgPreview = document.getElementById("image-preview");
-      const currentImageBox = document.getElementById("current-image");
-      const currentImageLink = document.getElementById("current-image-link");
-      const currentFileBox = document.getElementById("current-file");
-      const currentFileLink = document.getElementById("current-file-link");
+        const productsList = document.getElementById("products-list");
+        const listSearch = document.getElementById("list-search");
+        const listCatFilter = document.getElementById("list-cat-filter");
+        const listCount = document.getElementById("list-count");
 
-      const saveBtn = document.getElementById("save-btn");
-      const cancelBtn = document.getElementById("cancel-btn");
-      const refreshBtn = document.getElementById("refresh-btn");
+        /* ─── State ─── */
+        let allProducts = [];
+        let existingImageUrl = "";
+        let existingDetailsUrl = "";
+        let currentEditingId = "";
 
-      const productsList = document.getElementById("products-list");
-      const listSearch = document.getElementById("list-search");
-      const listCatFilter = document.getElementById("list-cat-filter");
-      const listCount = document.getElementById("list-count");
-
-      /* ─── State ─── */
-      let allProducts = [];
-      let existingImageUrl = "";
-      let existingDetailsUrl = "";
-      let currentEditingId = "";
-
-      /* ─── Helpers ─── */
-      function escapeHtml(v) {
-        return String(v)
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#39;");
-      }
-
-      function setMsg(text, isError = false) {
-        formMsg.className = `status-msg ${isError ? "err" : "ok"}`;
-        formMsg.textContent = text;
-      }
-
-      function clearMsg() {
-        formMsg.className = "status-msg";
-        formMsg.textContent = "";
-      }
-
-      function normalizeDescription(raw) {
-        return raw
-          .split("\n")
-          .map((l) => l.replace(/^[-*\u2022]\s*/, "").trim())
-          .filter(Boolean);
-      }
-
-      function resolveCategory() {
-        if (categoryField.value === "other") {
-          const custom = customCatField.value.trim().toLowerCase();
-          return custom || "other";
+        /* ─── Helpers ─── */
+        function escapeHtml(v) {
+          return String(v)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
         }
-        return categoryField.value;
-      }
 
-      /* ─── Category "other" toggle ─── */
-      categoryField.addEventListener("change", () => {
-        const isOther = categoryField.value === "other";
-        customCatWrap.classList.toggle("visible", isOther);
-        if (isOther) customCatField.focus();
-      });
+        function setMsg(text, isError = false) {
+          formMsg.className = `status-msg ${isError ? "err" : "ok"}`;
+          formMsg.textContent = text;
+        }
 
-      /* ─── Image preview ─── */
-      imageField.addEventListener("change", () => {
-        const file = imageField.files?.[0];
-        if (file) {
-          imgPreview.innerHTML = `<img src="${URL.createObjectURL(file)}" alt="Preview" />`;
-        } else if (existingImageUrl) {
-          imgPreview.innerHTML = `<img src="${escapeHtml(existingImageUrl)}" alt="Current" />`;
-        } else {
+        function clearMsg() {
+          formMsg.className = "status-msg";
+          formMsg.textContent = "";
+        }
+
+        function normalizeDescription(raw) {
+          return raw
+            .split("\n")
+            .map((l) => l.replace(/^[-*\u2022]\s*/, "").trim())
+            .filter(Boolean);
+        }
+
+        function resolveCategory() {
+          if (categoryField.value === "other") {
+            const custom = customCatField.value.trim().toLowerCase();
+            return custom || "other";
+          }
+          return categoryField.value;
+        }
+
+        /* ─── Category "other" toggle ─── */
+        categoryField.addEventListener("change", () => {
+          const isOther = categoryField.value === "other";
+          customCatWrap.classList.toggle("visible", isOther);
+          if (isOther) customCatField.focus();
+        });
+
+        /* ─── Image preview ─── */
+        imageField.addEventListener("change", () => {
+          const file = imageField.files?.[0];
+          if (file) {
+            imgPreview.innerHTML = `<img src="${URL.createObjectURL(file)}" alt="Preview" />`;
+          } else if (existingImageUrl) {
+            imgPreview.innerHTML = `<img src="${escapeHtml(existingImageUrl)}" alt="Current" />`;
+          } else {
+            imgPreview.textContent = "No image selected";
+          }
+        });
+
+        /* ─── Reset form ─── */
+        function resetForm() {
+          form.reset();
+          idField.value = "";
+          currentEditingId = "";
+          existingImageUrl = "";
+          existingDetailsUrl = "";
+
+          formHeading.textContent = "Add New Product";
+          cancelBtn.style.display = "none";
+          saveBtn.innerHTML =
+            '<span><i class="fa-solid fa-floppy-disk"></i></span> Save Product';
+
+          editBanner.classList.remove("visible");
+          formPanel.classList.remove("editing-mode");
+
           imgPreview.textContent = "No image selected";
-        }
-      });
-
-      /* ─── Reset form ─── */
-      function resetForm() {
-        form.reset();
-        idField.value = "";
-        currentEditingId = "";
-        existingImageUrl = "";
-        existingDetailsUrl = "";
-
-        formHeading.textContent = "Add New Product";
-        cancelBtn.style.display = "none";
-        saveBtn.innerHTML =
-          '<span><i class="fa-solid fa-floppy-disk"></i></span> Save Product';
-
-        editBanner.classList.remove("visible");
-        formPanel.classList.remove("editing-mode");
-
-        imgPreview.textContent = "No image selected";
-        currentImageBox.classList.remove("visible");
-        currentFileBox.classList.remove("visible");
-        customCatWrap.classList.remove("visible");
-
-        clearMsg();
-        document
-          .querySelectorAll(".p-card.is-editing")
-          .forEach((c) => c.classList.remove("is-editing"));
-      }
-
-      /* ─── Fill form for edit ─── */
-      function fillForm(product) {
-        currentEditingId = product.id;
-        idField.value = product.id;
-        titleField.value = product.title || "";
-        descriptionField.value = (product.description || []).join("\n");
-
-        const knownCats = ["ipc", "recorder", "switch", "accessory"];
-        const cat = (product.category || "other").toLowerCase();
-        if (knownCats.includes(cat)) {
-          categoryField.value = cat;
+          currentImageBox.classList.remove("visible");
+          currentFileBox.classList.remove("visible");
           customCatWrap.classList.remove("visible");
-        } else {
-          categoryField.value = "other";
-          customCatWrap.classList.add("visible");
-          customCatField.value = cat;
+
+          clearMsg();
+          document
+            .querySelectorAll(".p-card.is-editing")
+            .forEach((c) => c.classList.remove("is-editing"));
         }
 
-        existingImageUrl = product.image || "";
-        existingDetailsUrl = product.detailsUrl || "";
+        /* ─── Fill form for edit ─── */
+        function fillForm(product) {
+          currentEditingId = product.id;
+          idField.value = product.id;
+          titleField.value = product.title || "";
+          descriptionField.value = (product.description || []).join("\n");
 
-        if (existingImageUrl) {
-          currentImageBox.classList.add("visible");
-          currentImageLink.href = existingImageUrl;
-          imgPreview.innerHTML = `<img src="${escapeHtml(existingImageUrl)}" alt="Current" />`;
-        }
+          const knownCats = ["ipc", "recorder", "switch", "accessory"];
+          const cat = (product.category || "other").toLowerCase();
+          if (knownCats.includes(cat)) {
+            categoryField.value = cat;
+            customCatWrap.classList.remove("visible");
+          } else {
+            categoryField.value = "other";
+            customCatWrap.classList.add("visible");
+            customCatField.value = cat;
+          }
 
-        if (existingDetailsUrl) {
-          currentFileBox.classList.add("visible");
-          currentFileLink.href = existingDetailsUrl;
-        }
+          existingImageUrl = product.image || "";
+          existingDetailsUrl = product.detailsUrl || "";
 
-        formHeading.textContent = "Edit Product";
-        editBannerName.textContent = product.title || "";
-        editBanner.classList.add("visible");
-        formPanel.classList.add("editing-mode");
-        saveBtn.innerHTML =
-          '<span><i class="fa-solid fa-pen-to-square"></i></span> Update Product';
-        cancelBtn.style.display = "inline-flex";
+          if (existingImageUrl) {
+            currentImageBox.classList.add("visible");
+            currentImageLink.href = existingImageUrl;
+            imgPreview.innerHTML = `<img src="${escapeHtml(existingImageUrl)}" alt="Current" />`;
+          }
 
-        /* highlight card */
-        document
-          .querySelectorAll(".p-card")
-          .forEach((c) => c.classList.remove("is-editing"));
-        const card = document.querySelector(`.p-card[data-id="${product.id}"]`);
-        if (card) card.classList.add("is-editing");
+          if (existingDetailsUrl) {
+            currentFileBox.classList.add("visible");
+            currentFileLink.href = existingDetailsUrl;
+          }
 
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
+          formHeading.textContent = "Edit Product";
+          editBannerName.textContent = product.title || "";
+          editBanner.classList.add("visible");
+          formPanel.classList.add("editing-mode");
+          saveBtn.innerHTML =
+            '<span><i class="fa-solid fa-pen-to-square"></i></span> Update Product';
+          cancelBtn.style.display = "inline-flex";
 
-      /* ─── Upload to Cloudinary ─── */
-      async function uploadAssetsIfNeeded() {
-        const imgFile = imageField.files?.[0];
-        const detFile = detailsField.files?.[0];
-        const { preset } = getCloudinaryUploadInfo();
-
-        let imageUrl = existingImageUrl;
-        let detailsUrl = existingDetailsUrl;
-
-        if (imgFile) {
-          setMsg(`Uploading image (${(imgFile.size / 1024).toFixed(0)} KB)...`);
-          const r = await uploadFileToCloudinary(imgFile, {
-            folder: "hiai-products/images",
-          });
-          imageUrl = r.url;
-          setMsg("Image uploaded. Saving to Firebase...");
-        }
-
-        if (detFile) {
-          setMsg(
-            `Uploading details file (${(detFile.size / 1024).toFixed(0)} KB)...`,
+          /* highlight card */
+          document
+            .querySelectorAll(".p-card")
+            .forEach((c) => c.classList.remove("is-editing"));
+          const card = document.querySelector(
+            `.p-card[data-id="${product.id}"]`,
           );
-          const r = await uploadFileToCloudinary(detFile, {
-            folder: "hiai-products/details",
+          if (card) card.classList.add("is-editing");
+
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        /* ─── Upload details file to Firebase Storage ─── */
+        function uploadFileToStorage(file) {
+          return new Promise((resolve, reject) => {
+            const path = `hiai-products/details/${Date.now()}_${file.name}`;
+            const fileRef = ref(storage, path);
+            const task = uploadBytesResumable(fileRef, file);
+            task.on(
+              "state_changed",
+              (snap) => {
+                const pct = Math.round(
+                  (snap.bytesTransferred / snap.totalBytes) * 100,
+                );
+                setMsg(`Uploading details file… ${pct}%`);
+              },
+              reject,
+              async () => {
+                const url = await getDownloadURL(task.snapshot.ref);
+                resolve(url);
+              },
+            );
           });
-          detailsUrl = r.url;
-          setMsg("File uploaded. Saving to Firebase...");
         }
 
-        return { imageUrl, detailsUrl };
-      }
+        /* ─── Upload to Cloudinary (image) + Firebase Storage (details) ─── */
+        async function uploadAssetsIfNeeded() {
+          const imgFile = imageField.files?.[0];
+          const detFile = detailsField.files?.[0];
 
-      /* ─── Render compact cards ─── */
-      function renderList(products) {
-        if (!products.length) {
-          productsList.innerHTML =
-            '<div class="empty-state">No products found.</div>';
-          listCount.textContent = "0 products";
-          return;
+          let imageUrl = existingImageUrl;
+          let detailsUrl = existingDetailsUrl;
+
+          if (imgFile) {
+            setMsg(
+              `Uploading image (${(imgFile.size / 1024).toFixed(0)} KB)...`,
+            );
+            const r = await uploadFileToCloudinary(imgFile, {
+              folder: "hiai-products/images",
+            });
+            imageUrl = r.url;
+            setMsg("Image uploaded. Saving to Firebase...");
+          }
+
+          if (detFile) {
+            detailsUrl = await uploadFileToStorage(detFile);
+            setMsg("File uploaded. Saving to Firebase...");
+          }
+
+          return { imageUrl, detailsUrl };
         }
 
-        listCount.textContent = `${products.length} product${products.length !== 1 ? "s" : ""}`;
-        productsList.innerHTML = products
-          .map(
-            (p) => `
+        /* ─── Render compact cards ─── */
+        function renderList(products) {
+          if (!products.length) {
+            productsList.innerHTML =
+              '<div class="empty-state">No products found.</div>';
+            listCount.textContent = "0 products";
+            return;
+          }
+
+          listCount.textContent = `${products.length} product${products.length !== 1 ? "s" : ""}`;
+          productsList.innerHTML = products
+            .map(
+              (p) => `
           <div class="p-card" data-id="${escapeHtml(p.id)}">
             <img class="p-card-thumb"
               src="${escapeHtml(p.image)}"
@@ -1005,166 +1202,177 @@
             </div>
           </div>
         `,
-          )
-          .join("");
-      }
-
-      /* ─── Filter list ─── */
-      function applyListFilter() {
-        const q = listSearch.value.trim().toLowerCase();
-        const cat = listCatFilter.value;
-
-        const filtered = allProducts.filter((p) => {
-          const matchCat =
-            cat === "all" || (p.category || "other").toLowerCase() === cat;
-          const haystack = [p.title, p.category, ...(p.description || [])]
-            .join(" ")
-            .toLowerCase();
-          return matchCat && haystack.includes(q);
-        });
-
-        renderList(filtered);
-      }
-
-      listSearch.addEventListener("input", applyListFilter);
-      listCatFilter.addEventListener("change", applyListFilter);
-
-      /* ─── Inject dynamic categories into filter ─── */
-      function injectDynamicCategories(products) {
-        const known = new Set([
-          "all",
-          "ipc",
-          "recorder",
-          "switch",
-          "accessory",
-        ]);
-        const extras = new Set();
-
-        products.forEach((p) => {
-          const c = (p.category || "").toLowerCase();
-          if (c && !known.has(c)) extras.add(c);
-        });
-
-        /* remove previously injected */
-        listCatFilter
-          .querySelectorAll("[data-dynamic]")
-          .forEach((o) => o.remove());
-
-        extras.forEach((c) => {
-          const opt = document.createElement("option");
-          opt.value = c;
-          opt.textContent = c.charAt(0).toUpperCase() + c.slice(1);
-          opt.dataset.dynamic = "1";
-          listCatFilter.appendChild(opt);
-        });
-      }
-
-      /* ─── Load list ─── */
-      async function loadProductsList() {
-        if (!isFirebaseConfigured()) {
-          productsList.innerHTML =
-            '<div class="empty-state">Firebase not configured.</div>';
-          return;
+            )
+            .join("");
         }
 
-        productsList.innerHTML = '<div class="empty-state">Loading…</div>';
+        /* ─── Filter list ─── */
+        function applyListFilter() {
+          const q = listSearch.value.trim().toLowerCase();
+          const cat = listCatFilter.value;
 
-        try {
-          allProducts = await getProducts();
-          injectDynamicCategories(allProducts);
-          applyListFilter();
-        } catch (error) {
-          console.error(error);
-          const code = error?.code || "";
-          const hint =
-            code === "permission-denied"
-              ? "Firestore rules are blocking access. Allow read/write in Firebase console."
-              : code === "unavailable"
-                ? "Firestore offline. Check your connection."
-                : error?.message || "Unknown error.";
-          productsList.innerHTML = `<div class="empty-state" style="color:#b00">${hint}</div>`;
-        }
-      }
+          const filtered = allProducts.filter((p) => {
+            const matchCat =
+              cat === "all" || (p.category || "other").toLowerCase() === cat;
+            const haystack = [p.title, p.category, ...(p.description || [])]
+              .join(" ")
+              .toLowerCase();
+            return matchCat && haystack.includes(q);
+          });
 
-      /* ─── Form submit ─── */
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        clearMsg();
-
-        const title = titleField.value.trim();
-        const category = resolveCategory();
-        const description = normalizeDescription(descriptionField.value);
-        const editingId = idField.value.trim();
-        const hasImage = Boolean(imageField.files?.[0] || existingImageUrl);
-        const hasDetails = Boolean(
-          detailsField.files?.[0] || existingDetailsUrl,
-        );
-
-        if (!title || !description.length || !hasImage || !hasDetails) {
-          setMsg("Please fill all required fields.", true);
-          return;
+          renderList(filtered);
         }
 
-        saveBtn.disabled = cancelBtn.disabled = refreshBtn.disabled = true;
+        listSearch.addEventListener("input", applyListFilter);
+        listCatFilter.addEventListener("change", applyListFilter);
 
-        try {
-          const { imageUrl, detailsUrl } = await uploadAssetsIfNeeded();
-          const payload = {
-            title,
-            image: imageUrl,
-            detailsUrl,
-            category,
-            description,
-          };
+        /* ─── Inject dynamic categories into filter ─── */
+        function injectDynamicCategories(products) {
+          const known = new Set([
+            "all",
+            "ipc",
+            "recorder",
+            "switch",
+            "accessory",
+          ]);
+          const extras = new Set();
 
-          if (editingId) {
-            await updateProductById(editingId, payload);
-            setMsg("Product updated successfully.");
-          } else {
-            await createProduct(payload);
-            setMsg("Product created successfully.");
+          products.forEach((p) => {
+            const c = (p.category || "").toLowerCase();
+            if (c && !known.has(c)) extras.add(c);
+          });
+
+          /* remove previously injected */
+          listCatFilter
+            .querySelectorAll("[data-dynamic]")
+            .forEach((o) => o.remove());
+
+          extras.forEach((c) => {
+            const opt = document.createElement("option");
+            opt.value = c;
+            opt.textContent = c.charAt(0).toUpperCase() + c.slice(1);
+            opt.dataset.dynamic = "1";
+            listCatFilter.appendChild(opt);
+          });
+        }
+
+        /* ─── Load list ─── */
+        async function loadProductsList() {
+          if (!isFirebaseConfigured()) {
+            productsList.innerHTML =
+              '<div class="empty-state">Firebase not configured.</div>';
+            return;
           }
 
-          resetForm();
-          await loadProductsList();
-        } catch (err) {
-          console.error(err);
-          setMsg(err.message || "Unknown error", true);
-        } finally {
-          saveBtn.disabled = cancelBtn.disabled = refreshBtn.disabled = false;
-        }
-      });
+          productsList.innerHTML = '<div class="empty-state">Loading…</div>';
 
-      /* ─── List actions (edit / delete) ─── */
-      productsList.addEventListener("click", async (e) => {
-        const target = e.target.closest("[data-action]");
-        if (!target) return;
-
-        const { action, id } = target.dataset;
-        const product = allProducts.find((p) => p.id === id);
-
-        if (action === "edit") {
-          if (product) fillForm(product);
-          return;
-        }
-
-        if (action === "delete") {
-          if (!confirm(`Delete "${product?.title || id}"?`)) return;
           try {
-            await deleteProductById(id);
-            setMsg("Product deleted.");
+            allProducts = await getProducts();
+            injectDynamicCategories(allProducts);
+            applyListFilter();
+          } catch (error) {
+            console.error(error);
+            const code = error?.code || "";
+            const hint =
+              code === "permission-denied"
+                ? "Firestore rules are blocking access. Allow read/write in Firebase console."
+                : code === "unavailable"
+                  ? "Firestore offline. Check your connection."
+                  : error?.message || "Unknown error.";
+            productsList.innerHTML = `<div class="empty-state" style="color:#b00">${hint}</div>`;
+          }
+        }
+
+        /* ─── Form submit ─── */
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          clearMsg();
+
+          const title = titleField.value.trim();
+          const category = resolveCategory();
+          const description = normalizeDescription(descriptionField.value);
+          const editingId = idField.value.trim();
+          const hasImage = Boolean(imageField.files?.[0] || existingImageUrl);
+          const hasDetails = Boolean(
+            detailsField.files?.[0] || existingDetailsUrl,
+          );
+
+          if (!title || !description.length || !hasImage || !hasDetails) {
+            setMsg("Please fill all required fields.", true);
+            return;
+          }
+
+          saveBtn.disabled = cancelBtn.disabled = refreshBtn.disabled = true;
+
+          try {
+            const { imageUrl, detailsUrl } = await uploadAssetsIfNeeded();
+            const payload = {
+              title,
+              image: imageUrl,
+              detailsUrl,
+              category,
+              description,
+            };
+
+            if (editingId) {
+              await updateProductById(editingId, payload);
+              setMsg("Product updated successfully.");
+            } else {
+              await createProduct(payload);
+              setMsg("Product created successfully.");
+            }
+
+            resetForm();
             await loadProductsList();
           } catch (err) {
             console.error(err);
-            setMsg(`Delete failed: ${err.message}`, true);
+            setMsg(err.message || "Unknown error", true);
+          } finally {
+            saveBtn.disabled = cancelBtn.disabled = refreshBtn.disabled = false;
           }
-        }
-      });
+        });
 
-      cancelBtn.addEventListener("click", resetForm);
-      refreshBtn.addEventListener("click", loadProductsList);
+        /* ─── List actions (edit / delete) ─── */
+        productsList.addEventListener("click", async (e) => {
+          const target = e.target.closest("[data-action]");
+          if (!target) return;
 
-      loadProductsList();
-    </script>
+          const { action, id } = target.dataset;
+          const product = allProducts.find((p) => p.id === id);
+
+          if (action === "edit") {
+            if (product) fillForm(product);
+            return;
+          }
+
+          if (action === "delete") {
+            if (!confirm(`Delete "${product?.title || id}"?`)) return;
+            try {
+              await deleteProductById(id);
+              setMsg("Product deleted.");
+              await loadProductsList();
+            } catch (err) {
+              console.error(err);
+              setMsg(`Delete failed: ${err.message}`, true);
+            }
+          }
+        });
+
+        cancelBtn.addEventListener("click", resetForm);
+        refreshBtn.addEventListener("click", loadProductsList);
+
+        // ── SIDEBAR TOGGLE ──
+        const sidebar = document.getElementById("admin-sidebar");
+        const pageBody = document.getElementById("page-body");
+        const toggleBtn = document.getElementById("sidebar-toggle-btn");
+
+        toggleBtn.addEventListener("click", () => {
+          sidebar.classList.toggle("collapsed");
+          pageBody.classList.toggle("sidebar-collapsed");
+        });
+
+        loadProductsList();
+      </script>
+    </div>
   </body>
 </html>
