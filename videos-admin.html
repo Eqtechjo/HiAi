@@ -1,0 +1,1010 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Videos Admin - HiAi</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --brand: #004c92;
+        --brand-dk: #0d253f;
+        --accent: #ffa726;
+        --ok: #1e7e34;
+        --danger: #c62828;
+        --bg: #eef3f9;
+        --card: #ffffff;
+        --border: #dae4ef;
+        --text: #1b2736;
+        --muted: #5f7285;
+        --radius: 12px;
+        --shadow: 0 4px 18px rgba(13, 37, 63, 0.09);
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+      }
+
+      /* ── SIDEBAR ── */
+      .admin-sidebar {
+        position: fixed;
+        left: 0;
+        top: 60px;
+        width: 220px;
+        height: calc(100vh - 60px);
+        background: var(--brand-dk);
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+        padding: 20px 0;
+        z-index: 99;
+        overflow-y: auto;
+        overflow-x: hidden;
+        transition: width 0.25s ease;
+      }
+
+      .admin-sidebar.collapsed {
+        width: 54px;
+      }
+
+      .admin-sidebar a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: rgba(255, 255, 255, 0.75);
+        text-decoration: none;
+        padding: 12px 18px;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+      .admin-sidebar a:hover {
+        color: var(--accent);
+        background: rgba(255, 167, 38, 0.1);
+      }
+
+      .admin-sidebar a.active {
+        color: var(--accent);
+        background: rgba(255, 167, 38, 0.15);
+        border-left: 3px solid var(--accent);
+        padding-left: 15px;
+      }
+
+      .admin-sidebar a i {
+        width: 18px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+
+      .admin-sidebar a .nav-label {
+        transition: opacity 0.2s ease;
+      }
+
+      .admin-sidebar.collapsed a .nav-label {
+        opacity: 0;
+        width: 0;
+        overflow: hidden;
+      }
+
+      /* Toggle button inside sidebar */
+      .sidebar-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 8px 14px;
+        margin-bottom: 8px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .sidebar-toggle button {
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: rgba(255, 255, 255, 0.75);
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+      }
+
+      .sidebar-toggle button:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      /* ── LAYOUT WRAPPER ── */
+      .page-body {
+        display: flex;
+        min-height: calc(100vh - 60px);
+        transition: padding-left 0.25s ease;
+        padding-left: 220px;
+      }
+
+      .page-body.sidebar-collapsed {
+        padding-left: 54px;
+      }
+
+      /* ── ADJUST WORKSPACE FOR SIDEBAR ── */
+      .workspace {
+        flex: 1;
+        min-width: 0;
+        display: grid;
+        grid-template-columns: 390px 1fr;
+        gap: 20px;
+        max-width: 1380px;
+        margin: 24px auto;
+        padding: 0 20px 40px;
+        align-items: start;
+      }
+
+      @media (max-width: 768px) {
+        .admin-sidebar {
+          width: 54px;
+        }
+        .admin-sidebar a .nav-label {
+          opacity: 0;
+          width: 0;
+          overflow: hidden;
+        }
+        .page-body {
+          padding-left: 54px;
+        }
+      }
+
+      /* TOP BAR */
+      .topbar {
+        background: var(--brand-dk);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 0 28px;
+        height: 60px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .topbar-logo {
+        height: 38px;
+        border-radius: 6px;
+      }
+      .topbar-title {
+        font-size: 17px;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+      }
+      .topbar-badge {
+        background: var(--accent);
+        color: var(--brand-dk);
+        font-size: 11px;
+        font-weight: 700;
+        padding: 2px 10px;
+        border-radius: 20px;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+      }
+      .topbar-spacer {
+        flex: 1;
+      }
+      .topbar a {
+        color: rgba(255, 255, 255, 0.75);
+        text-decoration: none;
+        font-size: 13px;
+        transition: color 0.2s;
+      }
+      .topbar a:hover {
+        color: var(--accent);
+      }
+
+      /* LAYOUT */
+      .workspace {
+        display: grid;
+        grid-template-columns: 390px 1fr;
+        gap: 20px;
+        max-width: 1380px;
+        margin: 24px auto;
+        padding: 0 20px 40px;
+        align-items: start;
+      }
+
+      @media (max-width: 960px) {
+        .workspace {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* PANEL */
+      .panel {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .panel-header {
+        padding: 14px 18px;
+        background: #f5f9ff;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .panel-header h2 {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--brand-dk);
+        flex: 1;
+      }
+
+      .panel-body {
+        padding: 18px;
+      }
+
+      /* FORM */
+      .form-field {
+        margin-bottom: 14px;
+      }
+
+      .form-field label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--brand-dk);
+        margin-bottom: 5px;
+      }
+
+      .form-field input,
+      .form-field textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1.5px solid var(--border);
+        border-radius: 9px;
+        font-size: 13.5px;
+        font-family: inherit;
+        background: #fafcff;
+        color: var(--text);
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .form-field input:focus,
+      .form-field textarea:focus {
+        outline: none;
+        border-color: var(--brand);
+        box-shadow: 0 0 0 3px rgba(0, 76, 146, 0.1);
+        background: #fff;
+      }
+
+      .form-field textarea {
+        min-height: 80px;
+        resize: vertical;
+        line-height: 1.6;
+      }
+
+      .field-hint {
+        margin-top: 4px;
+        font-size: 11.5px;
+        color: var(--muted);
+      }
+
+      /* FILE UPLOAD */
+      .file-upload-area {
+        border: 2px dashed var(--border);
+        border-radius: 9px;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        background: #fafcff;
+      }
+
+      .file-upload-area:hover {
+        border-color: var(--brand);
+        background: #f0f7ff;
+      }
+
+      .file-upload-area.active {
+        border-color: var(--accent);
+        background: rgba(255, 167, 38, 0.05);
+      }
+
+      .file-upload-icon {
+        font-size: 28px;
+        color: var(--brand);
+        margin-bottom: 8px;
+      }
+
+      .file-upload-text {
+        font-size: 13px;
+        color: var(--text);
+        font-weight: 600;
+      }
+
+      .file-upload-hint {
+        font-size: 11.5px;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+
+      .file-input {
+        display: none;
+      }
+
+      .thumb-preview {
+        margin-top: 10px;
+        border-radius: 9px;
+        overflow: hidden;
+        max-height: 140px;
+      }
+
+      .thumb-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 9px;
+      }
+
+      /* BUTTONS */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        border: none;
+        border-radius: 9px;
+        padding: 10px 16px;
+        font-size: 13px;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        transition:
+          transform 0.15s,
+          opacity 0.2s,
+          box-shadow 0.2s;
+        white-space: nowrap;
+      }
+
+      .btn:hover:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      }
+      .btn:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+
+      .btn-primary {
+        background: var(--brand);
+        color: #fff;
+      }
+      .btn-danger {
+        background: var(--danger);
+        color: #fff;
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--brand);
+        border: 1.5px solid var(--border);
+      }
+      .btn-ghost:hover:not(:disabled) {
+        border-color: var(--brand);
+        background: #f0f7ff;
+      }
+      .btn-sm {
+        padding: 6px 11px;
+        font-size: 12px;
+        border-radius: 7px;
+      }
+      .btn-icon {
+        padding: 7px;
+        border-radius: 7px;
+      }
+
+      /* STATUS */
+      .status-msg {
+        margin-top: 10px;
+        padding: 9px 13px;
+        border-radius: 9px;
+        font-size: 12.5px;
+        font-weight: 600;
+        display: none;
+      }
+      .status-msg.ok {
+        display: block;
+        background: #e8f5e9;
+        color: #1b5e20;
+        border: 1px solid #a5d6a7;
+      }
+      .status-msg.err {
+        display: block;
+        background: #ffebee;
+        color: #7f0000;
+        border: 1px solid #ef9a9a;
+      }
+
+      /* VIDEO GRID */
+      .video-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 12px;
+        max-height: 76vh;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--brand) #e0e6ed;
+      }
+
+      .video-grid::-webkit-scrollbar {
+        width: 6px;
+      }
+      .video-grid::-webkit-scrollbar-thumb {
+        background: var(--brand);
+        border-radius: 4px;
+      }
+
+      .v-card {
+        display: grid;
+        grid-template-columns: 100px 1fr auto;
+        gap: 12px;
+        align-items: center;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 10px 12px;
+        transition:
+          box-shadow 0.2s,
+          border-color 0.2s;
+      }
+
+      .v-card:hover {
+        box-shadow: 0 4px 14px rgba(13, 37, 63, 0.1);
+        border-color: #b8cfe8;
+      }
+
+      .v-card-thumb {
+        width: 100px;
+        height: 60px;
+        border-radius: 7px;
+        object-fit: cover;
+        background: #e8eef5;
+        flex-shrink: 0;
+      }
+
+      .v-card-info {
+        overflow: hidden;
+      }
+      .v-card-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--brand-dk);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .v-card-actions {
+        display: flex;
+        gap: 6px;
+        flex-shrink: 0;
+      }
+
+      .empty-state {
+        padding: 36px 20px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .form-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 16px;
+        padding-top: 14px;
+        border-top: 1px solid var(--border);
+      }
+
+      .small-note {
+        font-size: 11.5px;
+        color: var(--muted);
+        padding: 10px 18px;
+        border-top: 1px solid var(--border);
+        background: #f9fbfd;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 4px;
+        background: #e0e6ed;
+        border-radius: 2px;
+        margin-top: 8px;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: var(--brand);
+        width: 0%;
+        transition: width 0.2s;
+      }
+
+      @media (max-width: 960px) {
+        .workspace {
+          grid-template-columns: 1fr;
+        }
+        .video-grid {
+          max-height: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <img
+        src="https://res.cloudinary.com/dcbxuax2c/image/upload/v1752426303/%D9%8B_unn6mp_epv4pk.png"
+        alt="HiAi"
+        class="topbar-logo"
+      />
+      <span class="topbar-title">HiAi</span>
+      <span class="topbar-badge">Videos Admin</span>
+      <span class="topbar-spacer"></span>
+      <a href="video-gallery.html">View Gallery ↗</a>
+    </header>
+
+    <!-- SIDEBAR NAVIGATION -->
+    <nav class="admin-sidebar" id="admin-sidebar">
+      <div class="sidebar-toggle">
+        <button id="sidebar-toggle-btn" title="Toggle sidebar">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+      <a href="admin-HiAi.html">
+        <i class="fa-solid fa-cube"></i>
+        <span class="nav-label">Products</span>
+      </a>
+      <a href="videos-admin.html" class="active">
+        <i class="fa-solid fa-film"></i>
+        <span class="nav-label">Videos</span>
+      </a>
+    </nav>
+
+    <div class="page-body" id="page-body">
+      <main class="workspace">
+        <!-- LEFT: FORM -->
+        <aside class="panel" id="form-panel">
+          <div class="panel-header">
+            <span><i class="fa-solid fa-film"></i></span>
+            <h2 id="form-heading">Add New Video</h2>
+          </div>
+
+          <form class="panel-body" id="video-form" novalidate>
+            <input type="hidden" id="video-id" />
+
+            <!-- Title -->
+            <div class="form-field">
+              <label for="title"
+                ><span><i class="fa-solid fa-heading fa-fw"></i></span>
+                Title</label
+              >
+              <input
+                id="title"
+                type="text"
+                placeholder="e.g. Product Demo"
+                required
+              />
+            </div>
+
+            <!-- Description -->
+            <div class="form-field">
+              <label for="description"
+                ><span><i class="fa-solid fa-align-left fa-fw"></i></span>
+                Description</label
+              >
+              <textarea
+                id="description"
+                placeholder="Brief description of the video"
+                required
+              ></textarea>
+            </div>
+
+            <!-- Thumbnail Upload (Cloudinary) -->
+            <div class="form-field">
+              <label for="thumbnail-file"
+                ><span><i class="fa-solid fa-image fa-fw"></i></span> Thumbnail
+                Image</label
+              >
+              <div class="file-upload-area" id="thumbnail-drop">
+                <div class="file-upload-icon">
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                </div>
+                <div class="file-upload-text">Click or drag image here</div>
+                <div class="file-upload-hint">JPEG, PNG (Max 5MB)</div>
+                <input
+                  id="thumbnail-file"
+                  type="file"
+                  class="file-input"
+                  accept="image/*"
+                  required
+                />
+              </div>
+              <div
+                class="thumb-preview"
+                id="thumb-preview"
+                style="display: none"
+              >
+                <img id="thumb-preview-img" alt="Preview" />
+              </div>
+              <div
+                class="progress-bar"
+                id="thumb-progress"
+                style="display: none"
+              >
+                <div class="progress-fill"></div>
+              </div>
+            </div>
+
+            <!-- Video URL (YouTube, Vimeo, or direct) -->
+            <div class="form-field">
+              <label for="video-url"
+                ><span><i class="fa-solid fa-play fa-fw"></i></span> Video
+                URL</label
+              >
+              <input
+                id="video-url"
+                type="url"
+                placeholder="https://youtube.com/watch?v=... or direct video link"
+                required
+              />
+              <p class="field-hint">YouTube, Vimeo, or direct video link</p>
+            </div>
+
+            <!-- Status -->
+            <div class="status-msg" id="form-msg"></div>
+
+            <!-- Actions -->
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" id="save-btn">
+                <span><i class="fa-solid fa-floppy-disk"></i></span> Save Video
+              </button>
+              <button
+                type="button"
+                class="btn btn-ghost"
+                id="cancel-btn"
+                style="display: none"
+              >
+                <span><i class="fa-solid fa-xmark"></i></span> Cancel
+              </button>
+            </div>
+          </form>
+
+          <p class="small-note">
+            Videos are displayed on the video gallery page.
+          </p>
+        </aside>
+
+        <!-- RIGHT: LIST -->
+        <section class="panel" id="list-panel">
+          <div class="panel-header">
+            <span><i class="fa-solid fa-list"></i></span>
+            <h2>Videos</h2>
+          </div>
+
+          <div class="video-grid" id="videos-list">
+            <div class="empty-state">Loading videos…</div>
+          </div>
+        </section>
+      </main>
+
+      <script type="module">
+        import {
+          getVideos,
+          createVideo,
+          updateVideoById,
+          deleteVideoById,
+          isFirebaseConfigured,
+        } from "./firebase-config.js";
+        import { uploadFileToCloudinary } from "./cloudinary-config.js";
+
+        const form = document.getElementById("video-form");
+        const formMsg = document.getElementById("form-msg");
+        const formHeading = document.getElementById("form-heading");
+        const idField = document.getElementById("video-id");
+        const titleField = document.getElementById("title");
+        const descField = document.getElementById("description");
+        const thumbFileInput = document.getElementById("thumbnail-file");
+        const thumbDrop = document.getElementById("thumbnail-drop");
+        const thumbPreview = document.getElementById("thumb-preview");
+        const thumbPreviewImg = document.getElementById("thumb-preview-img");
+        const thumbProgress = document.getElementById("thumb-progress");
+        const videoUrlField = document.getElementById("video-url");
+        const saveBtn = document.getElementById("save-btn");
+        const cancelBtn = document.getElementById("cancel-btn");
+        const videosList = document.getElementById("videos-list");
+
+        let allVideos = [];
+        let currentEditId = "";
+        let uploadedThumbnailUrl = "";
+
+        function setMsg(text, isError = false) {
+          formMsg.className = `status-msg ${isError ? "err" : "ok"}`;
+          formMsg.textContent = text;
+        }
+
+        function clearMsg() {
+          formMsg.className = "status-msg";
+          formMsg.textContent = "";
+        }
+
+        function resetForm() {
+          form.reset();
+          idField.value = "";
+          currentEditId = "";
+          uploadedThumbnailUrl = "";
+          formHeading.textContent = "Add New Video";
+          cancelBtn.style.display = "none";
+          saveBtn.innerHTML =
+            '<span><i class="fa-solid fa-floppy-disk"></i></span> Save Video';
+          thumbPreview.style.display = "none";
+          thumbProgress.style.display = "none";
+          clearMsg();
+        }
+
+        function fillForm(video) {
+          currentEditId = video.id;
+          idField.value = video.id;
+          titleField.value = video.title || "";
+          descField.value = video.description || "";
+          videoUrlField.value = video.videoUrl || "";
+          uploadedThumbnailUrl = video.thumbnailUrl || "";
+
+          // Show preview
+          if (uploadedThumbnailUrl) {
+            thumbPreviewImg.src = uploadedThumbnailUrl;
+            thumbPreview.style.display = "block";
+          }
+
+          formHeading.textContent = "Edit Video";
+          saveBtn.innerHTML =
+            '<span><i class="fa-solid fa-pen-to-square"></i></span> Update Video';
+          cancelBtn.style.display = "inline-flex";
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        function renderList(videos) {
+          if (!videos.length) {
+            videosList.innerHTML =
+              '<div class="empty-state">No videos yet</div>';
+            return;
+          }
+
+          videosList.innerHTML = videos
+            .map(
+              (v) => `
+          <div class="v-card" data-id="${v.id}">
+            <img class="v-card-thumb" src="${v.thumbnailUrl}" alt="${v.title}" onerror="this.style.background='#e0e9f3'" />
+            <div class="v-card-info">
+              <div class="v-card-title">${v.title}</div>
+            </div>
+            <div class="v-card-actions">
+              <button type="button" class="btn btn-ghost btn-sm btn-icon" data-action="edit" data-id="${v.id}" title="Edit">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+              <button type="button" class="btn btn-danger btn-sm btn-icon" data-action="delete" data-id="${v.id}" title="Delete">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        `,
+            )
+            .join("");
+        }
+
+        async function loadVideos() {
+          if (!isFirebaseConfigured()) {
+            videosList.innerHTML =
+              '<div class="empty-state">Firebase not configured</div>';
+            return;
+          }
+
+          try {
+            allVideos = await getVideos();
+            renderList(allVideos);
+          } catch (err) {
+            console.error(err);
+            videosList.innerHTML = `<div class="empty-state" style="color:#b00">${err.message}</div>`;
+          }
+        }
+
+        // File upload handling
+        thumbDrop.addEventListener("click", () => thumbFileInput.click());
+
+        thumbFileInput.addEventListener("change", (e) => {
+          const file = e.target.files?.[0];
+          if (file) handleFileSelect(file);
+        });
+
+        thumbDrop.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          thumbDrop.classList.add("active");
+        });
+
+        thumbDrop.addEventListener("dragleave", () => {
+          thumbDrop.classList.remove("active");
+        });
+
+        thumbDrop.addEventListener("drop", (e) => {
+          e.preventDefault();
+          thumbDrop.classList.remove("active");
+          const file = e.dataTransfer.files?.[0];
+          if (file && file.type.startsWith("image/")) {
+            handleFileSelect(file);
+          } else {
+            setMsg("Please drop an image file", true);
+          }
+        });
+
+        function handleFileSelect(file) {
+          const maxSize = 5 * 1024 * 1024; // 5MB
+          if (file.size > maxSize) {
+            setMsg("Image too large (max 5MB)", true);
+            return;
+          }
+
+          // Show preview
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            thumbPreviewImg.src = e.target.result;
+            thumbPreview.style.display = "block";
+          };
+          reader.readAsDataURL(file);
+
+          // Upload to Cloudinary
+          uploadThumbnailToCloudinary(file);
+        }
+
+        async function uploadThumbnailToCloudinary(file) {
+          clearMsg();
+          thumbProgress.style.display = "block";
+          const progressFill = thumbProgress.querySelector(".progress-fill");
+
+          try {
+            // Simulate progress
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+              progress = Math.min(progress + Math.random() * 30, 90);
+              progressFill.style.width = progress + "%";
+            }, 100);
+
+            const result = await uploadFileToCloudinary(file, {
+              folder: "hiai-videos",
+            });
+
+            clearInterval(progressInterval);
+            progressFill.style.width = "100%";
+
+            uploadedThumbnailUrl = result.url;
+            setMsg("Image uploaded successfully");
+
+            setTimeout(() => {
+              thumbProgress.style.display = "none";
+              progressFill.style.width = "0%";
+            }, 1000);
+          } catch (err) {
+            console.error(err);
+            setMsg(err.message || "Upload failed", true);
+            thumbProgress.style.display = "none";
+            uploadedThumbnailUrl = "";
+          }
+        }
+
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          clearMsg();
+
+          const title = titleField.value.trim();
+          const desc = descField.value.trim();
+          const videoUrl = videoUrlField.value.trim();
+
+          if (!title || !desc || !uploadedThumbnailUrl || !videoUrl) {
+            setMsg("All fields are required (upload image)", true);
+            return;
+          }
+
+          saveBtn.disabled = true;
+
+          try {
+            const payload = {
+              title,
+              description: desc,
+              thumbnailUrl: uploadedThumbnailUrl,
+              videoUrl,
+            };
+
+            if (currentEditId) {
+              await updateVideoById(currentEditId, payload);
+              setMsg("Video updated successfully");
+            } else {
+              await createVideo(payload);
+              setMsg("Video created successfully");
+            }
+
+            resetForm();
+            await loadVideos();
+          } catch (err) {
+            console.error(err);
+            setMsg(err.message || "Error", true);
+          } finally {
+            saveBtn.disabled = false;
+          }
+        });
+
+        videosList.addEventListener("click", async (e) => {
+          const btn = e.target.closest("[data-action]");
+          if (!btn) return;
+
+          const { action, id } = btn.dataset;
+          const video = allVideos.find((v) => v.id === id);
+
+          if (action === "edit") {
+            if (video) fillForm(video);
+            return;
+          }
+
+          if (action === "delete") {
+            if (!confirm(`Delete "${video?.title || id}"?`)) return;
+            try {
+              await deleteVideoById(id);
+              setMsg("Video deleted");
+              await loadVideos();
+            } catch (err) {
+              setMsg(`Delete failed: ${err.message}`, true);
+            }
+          }
+        });
+
+        cancelBtn.addEventListener("click", resetForm);
+
+        // ── SIDEBAR TOGGLE ──
+        const sidebar = document.getElementById("admin-sidebar");
+        const pageBody = document.getElementById("page-body");
+        const toggleBtn = document.getElementById("sidebar-toggle-btn");
+
+        toggleBtn.addEventListener("click", () => {
+          sidebar.classList.toggle("collapsed");
+          pageBody.classList.toggle("sidebar-collapsed");
+        });
+
+        loadVideos();
+      </script>
+    </div>
+  </body>
+</html>
